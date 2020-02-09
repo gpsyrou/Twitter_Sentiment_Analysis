@@ -14,11 +14,7 @@ import json
 # Project directory location
 os.chdir('C:\\Users\\hz336yw\\Desktop\\Twitter_Project')
 
-# Set up the configuration to the Twitter API
-consumer_key = 'pGSgo0UFXiEESa0vt7zTMtiP2'
-consumer_secret = 'UWxjYxj470RoYXldF11OlQQT4XEf4RIqhwDHeQSkHLUOlQkOGH'
-access_token = '1034131506615267334-LxNsWHtFf44l5wBbtH7uQ3XV18ruWi'
-access_token_secret = 'Swt3ghPjqgGPAM62G5H152KF2QL0mdZxa7dksGAZDimrg'
+
 
 auth = tw.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)

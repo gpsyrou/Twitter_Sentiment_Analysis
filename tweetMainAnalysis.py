@@ -55,12 +55,14 @@ print(premium_search_args)
 
 # Create the searching rule for the stream
 rule = gen_rule_payload(pt_rule=data['search_query'],
-                        from_date="2020-01-01",
-                        to_date="2020-02-15" )
+                        from_date="2020-01-16",
+                        to_date="2020-02-15" ,
+                        results_per_call = 150,
+                        count_bucket="day")
 
 # Set up the stream
 rs = ResultStream(rule_payload=rule,
-                  max_results=3000,
+                  max_results=4500,
                   **premium_search_args)
 print(rs)    
 
@@ -75,7 +77,8 @@ with open(filename, 'a', encoding='utf-8') as f:
     for tweet in rs.stream():
         cntr += 1
         if cntr % 100 == 0:
-            print(f'{str(n)}: {tweet[\'created_at\']}')
+            n_str, cr_date = str(cntr), tweet['created_at']
+            print(f'\n {n_str}: {cr_date}')
         json.dump(tweet, f)
         f.write('\n')
 
@@ -88,10 +91,8 @@ tweets_full_list = twf.loadJsonlData(filename)
 # 4. Main exploratory data analysis on the data received from the API.
 
 # Create a dataframe based on the relevant data from tweets_full_list
-user_ls = []
-tweet_ls = []
-location_ls = []
-datetime_ls = []
+user_ls, tweet_ls = [], []
+location_ls, datetime_ls = [], []
 
 for tweet_dict in tweets_full_list:
     user_ls.append(tweet_dict['user']['screen_name'])
@@ -104,7 +105,6 @@ for tweet_dict in tweets_full_list:
 # This project will focus on tweets and with their respective location/date.
 df = pd.DataFrame(list(zip(user_ls, tweet_ls, location_ls, datetime_ls)), 
                   columns = ['Username','Tweet','Location', 'Date'])
-
 
 
 # Remove punctuation and stop words

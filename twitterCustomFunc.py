@@ -1,16 +1,54 @@
+"""
+-------------------------------------------------------------------
+-- Title:   Analysis of Coronavirus related Tweets using TwitterAPI
+-- File:    twitterCustomFunc.py
+-- Purpose: Custom functions used for the project.
+-- Author:  Georgios Spyrou
+-- Date:    15/02/2020 10:33:47
+-------------------------------------------------------------------
+"""
+
+# Dependencies used from the functions
 import re
 import string
+import pandas as pd
+import json_lines
 import matplotlib.pyplot as plt
 from nltk.tokenize import TweetTokenizer
 
-def removeURL(text):
+
+def loadJsonlData(file: str) -> list:
+    '''
+    Reads the data as saved in a .jsonl file
+    
+    Args:
+    ----
+    file: String corresponding to the path to a .jsonl file which contains the 
+          tweets as received from the TwitterAPI.
+
+    Returns:
+    -------
+    tweets: A list of all the data saved in the .jsonl file.
+    '''
+    
+    tweets = []
+    with open(file, 'rb') as f:
+        for tweet in json_lines.reader(f, broken=True):
+            tweets.append(tweet)
+    return (tweets)
+
+
+def removeURL(text: str) -> str:
     '''
     Removes URLs (strings that start with 'http\\ or htpps\\) from text
     
-    Parameters
-    ---
-        text: str
-    
+    Args:
+    ----
+        text: Input string the we want to remove the URL from.
+     
+    Returns:
+    -------
+    text: The input string clean from any URL.
     '''
 
     regex = r'http[0-9a-zA-Z\\/.:]+.'
@@ -29,19 +67,24 @@ def removeURL(text):
         pass
     
 
-def rmPunctAndStopwords(text, stopwordlist, num_list):
+def rmPunctAndStopwords(text: str, stopwordlist: list, num_list: list) -> str:
     '''
     Given text, remove stopwords and punctuation from the string and convert
     all characters to lowercase.
     
-    Parameters
-    ---
+    Args:
+    ----
     text : str
             Input text for cleaning.
     stopwordlist: list
             List of stopwords to be removed from the string.
     num_list: list
-            List of numbe of number to be removed from the string.
+            List of number to be removed from the string.
+    
+    Returns:
+    -------
+    text: str
+        The input string as lowercase, clean from stopwords/punctuation/numbers
     '''
 
     tknzr = TweetTokenizer()
@@ -56,18 +99,18 @@ def rmPunctAndStopwords(text, stopwordlist, num_list):
     return text
 
 
-def plotMostCommonWords(counterDataFrame):
+def plotMostCommonWords(counterDataFrame: pd.core.frame.DataFrame) ->list:
     '''
     Plot the most common words that appear in a corpus.
     
-    Parameters
-    ---
-    counterList: Dataframe
+    Args:
+    ----
+    counterDataFrame: Dataframe
             Contains a dataframe of the form ['word','count'] 
             
-    Result
-    ---
-    Returns a plot of the most common words.
+    Returns:
+    -------
+    A plot of the most common words.
         
     '''
     fig, ax = plt.subplots(figsize=(10, 10))

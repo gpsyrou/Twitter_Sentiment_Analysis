@@ -1,5 +1,7 @@
 # Twitter_Topic_Modelling
 
+# Topic: Analysis of Coronavirus related Tweets using TwitterAPI
+
 # Issue Log
     1) 15/02/2020: The TwitterAPI has a limit of 5000 tweets for the FullArchive version, and 25000 for the 30day version.
 		   Need to find a way to receive data for each day for a month period, as the API does not seem to provide this functionality.

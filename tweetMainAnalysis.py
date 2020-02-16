@@ -54,7 +54,7 @@ print(premium_search_args)
 
 
 # Set tweet extraction period and create a list of days of interest
-fromDate = "2020-01-25"
+fromDate = "2020-02-02"
 toDate = "2020-02-15"
 
 daysList = [fromDate]

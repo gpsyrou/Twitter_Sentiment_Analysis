@@ -54,7 +54,7 @@ print(premium_search_args)
 
 
 # Set tweet extraction period and create a list of days of interest
-fromDate = "2020-01-17"
+fromDate = "2020-01-25"
 toDate = "2020-02-15"
 
 daysList = [fromDate]
@@ -105,8 +105,22 @@ for day in daysList:
 
 # 3. Import the data from the created .jsonl file
 
-# Read the data from the jsonl file
-tweets_full_list = twf.loadJsonlData(filename)
+# Read the data from the jsonl files
+jsonl_files_folder = os.path.join(data["project_directory"],data["outputFiles"])
+
+# List that will contain all the Tweets that we managed to receive
+# via the use of the API
+
+allTweetsList = []
+
+for file in os.listdir(jsonl_files_folder):
+    tweets_full_list = twf.loadJsonlData(os.path.join(jsonl_files_folder,file))
+    allTweetsList += tweets_full_list
+
+
+############# Data Retrieval - end ##########################
+
+
 
 # 4. Main exploratory data analysis on the data received from the API.
 
@@ -114,7 +128,7 @@ tweets_full_list = twf.loadJsonlData(filename)
 user_ls, tweet_ls = [], []
 location_ls, datetime_ls = [], []
 
-for tweet_dict in tweets_full_list:
+for tweet_dict in allTweetsList:
     user_ls.append(tweet_dict['user']['screen_name'])
     tweet_ls.append(twf.removeURL(tweet_dict['text']))
     location_ls.append(tweet_dict['user']['location'])
@@ -127,14 +141,23 @@ df = pd.DataFrame(list(zip(user_ls, tweet_ls, location_ls, datetime_ls)),
                   columns = ['Username','Tweet','Location', 'Date'])
 
 
+# Remove tweets that they did not have any text
+df = df[df['Tweet'].notnull()]
+
 # Remove punctuation and stop words
 from nltk.corpus import stopwords
 
-eng_stopwords = set(stopwords.words('english'))
+allStopWords = list(stopwords.words('english'))
+spanish_stopwords = list(stopwords.words('spanish'))
+
+# Remove common words used in tweets plus the term that we used for the query
+commonTweeterStopwords = ['rt','retweet','#{0}'.format(data['search_query'])]
+                          
+allStopWords.extend(commonTweeterStopwords + spanish_stopwords)
 num_list = '0123456789'
 
 df['Tweet'] = df['Tweet'].apply(lambda x: 
-    twf.rmPunctAndStopwords(x, eng_stopwords, num_list))
+    twf.rmPunctAndStopwords(x, allStopWords, num_list))
 
 
 # Find the most common words across all tweets

@@ -186,3 +186,5 @@ wordcloud = WordCloud().generate(gen_text)
 
 plt.imshow(wordcloud, interpolation='bilinear')
 plt.axis("off")
+
+# Find bigrams

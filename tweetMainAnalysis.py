@@ -58,6 +58,7 @@ fromDate = "2020-01-17"
 toDate = "2020-02-15"
 
 daysList = [fromDate]
+
 while fromDate != toDate:
     date = datetime.strptime(fromDate, "%Y-%m-%d")
     mod_date = date + timedelta(days=1)
@@ -66,35 +67,41 @@ while fromDate != toDate:
     
     fromDate = incrementedDay
 
-
-# Create the searching rule for the stream
-rule = gen_rule_payload(pt_rule=data['search_query'],
-                        from_date=fromDate,
-                        to_date=toDate ,
-                        results_per_call = 100)
-
-# Set up the stream
-rs = ResultStream(rule_payload=rule,
-                  max_results=500,
-                  **premium_search_args)
-print(rs)    
-
-
-# Create a .jsonl with the results of the Stream query
-#file_date = datetime.now().strftime('%Y_%m_%d_%H_%M')
-filename = os.path.join(data["project_directory"],f'twitter_30day_api_results_{fromDate}_{toDate}.jsonl')
-
-# Write the data received from the API to a file
-with open(filename, 'a', encoding='utf-8') as f:
-    cntr = 0
-    for tweet in rs.stream():
-        cntr += 1
-        if cntr % 100 == 0:
-            n_str, cr_date = str(cntr), tweet['created_at']
-            print(f'\n {n_str}: {cr_date}')
-        json.dump(tweet, f)
-        f.write('\n')
-
+# Retrieve the data for each day from the API
+for day in daysList:
+    
+    dayNhourList = twf.createDateTimeFrame(day, hourSep=2)
+    
+    for hs in dayNhourList:
+        fromDate = hs[0]
+        toDate = hs[1]
+        # Create the searching rule for the stream
+        rule = gen_rule_payload(pt_rule=data['search_query'],
+                                from_date=fromDate,
+                                to_date=toDate ,
+                                results_per_call = 100)
+    
+        # Set up the stream
+        rs = ResultStream(rule_payload=rule,
+                          max_results=100,
+                          **premium_search_args)
+    
+        # Create a .jsonl with the results of the Stream query
+        #file_date = datetime.now().strftime('%Y_%m_%d_%H_%M')
+        file_date = '_'.join(hs).replace(' ', '').replace(':','')
+        filename = os.path.join(data["outputFiles"],f'twitter_30day_results_{file_date}.jsonl')
+    
+        # Write the data received from the API to a file
+        with open(filename, 'a', encoding='utf-8') as f:
+            cntr = 0
+            for tweet in rs.stream():
+                cntr += 1
+                if cntr % 100 == 0:
+                    n_str, cr_date = str(cntr), tweet['created_at']
+                    print(f'\n {n_str}: {cr_date}')
+                json.dump(tweet, f)
+                f.write('\n')
+        print(f'Created file {f}:')
 
 # 3. Import the data from the created .jsonl file
 

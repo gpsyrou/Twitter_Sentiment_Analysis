@@ -14,6 +14,7 @@ import string
 import pandas as pd
 import json_lines
 import matplotlib.pyplot as plt
+from datetime import datetime, timedelta
 from nltk.tokenize import TweetTokenizer
 
 
@@ -123,3 +124,31 @@ def plotMostCommonWords(counterDataFrame: pd.core.frame.DataFrame) ->list:
     ax.set_title("Common Words Found in Tweets (Without Stop Words)")
     
     plt.show()
+
+def createDateTimeFrame(day: str, hourSep: int) -> list:
+    '''
+    Given a specific day of the year, split the day into n amount of timeframes
+    
+    Args:
+    ----
+    day: Day of the year in a "%Y-%m-%d" format.
+    hourSep: Number of hours to add in each timeframe.
+    
+    Returns:
+    --------
+    timeFrameList: List of equally splitted timeframes for the day.
+    
+    #TODO: make hourDivisionsList a parameter
+    
+    '''
+    hourDivisionsList = ['10:00', '14:00', '20:00', '22:00']
+    timeFrameList = []
+    for tframe in hourDivisionsList:
+        datePart = day + f' {tframe}'
+        date = datetime.strptime(datePart, "%Y-%m-%d %H:%M")
+        mod_date = date + timedelta(hours=2)
+        incrementedDate = datetime.strftime(mod_date, "%Y-%m-%d %H:%M")
+    
+        timeFrameList.append([datePart, incrementedDate])
+    
+    return timeFrameList

@@ -19,8 +19,7 @@ import seaborn as sns
 import networkx as nx
 
 import json
-import json_lines
-from datetime  import datetime
+from datetime  import datetime, timedelta
 
 # Twitter related
 import tweepy as tw
@@ -43,7 +42,7 @@ os.chdir(data["project_directory"])
 # 2. Import the custom functions that we will use to retrieve and analyse
 #    the data, and use the API to save the data to a .jsonl file.
 
-import twitter_functions as twf
+import twitterCustomFunc as twf
 
 twitter_keys_loc = data["keys"]
 
@@ -53,23 +52,37 @@ premium_search_args = load_credentials(twitter_keys_loc,
                                        env_overwrite=False)
 print(premium_search_args)
 
+
+# Set tweet extraction period and create a list of days of interest
+fromDate = "2020-01-17"
+toDate = "2020-02-15"
+
+daysList = [fromDate]
+while fromDate != toDate:
+    date = datetime.strptime(fromDate, "%Y-%m-%d")
+    mod_date = date + timedelta(days=1)
+    incrementedDay = datetime.strftime(mod_date, "%Y-%m-%d")
+    daysList.append(incrementedDay)
+    
+    fromDate = incrementedDay
+
+
 # Create the searching rule for the stream
 rule = gen_rule_payload(pt_rule=data['search_query'],
-                        from_date="2020-01-16",
-                        to_date="2020-02-15" ,
-                        results_per_call = 150,
-                        count_bucket="day")
+                        from_date=fromDate,
+                        to_date=toDate ,
+                        results_per_call = 100)
 
 # Set up the stream
 rs = ResultStream(rule_payload=rule,
-                  max_results=4500,
+                  max_results=500,
                   **premium_search_args)
 print(rs)    
 
 
 # Create a .jsonl with the results of the Stream query
-file_date = datetime.now().strftime('%Y_%m_%d_%H_%M')
-filename = os.path.join('C:\\Users\\hz336yw\\Desktop\\',f'twitter_premium_api_results_{file_date}.jsonl')
+#file_date = datetime.now().strftime('%Y_%m_%d_%H_%M')
+filename = os.path.join(data["project_directory"],f'twitter_30day_api_results_{fromDate}_{toDate}.jsonl')
 
 # Write the data received from the API to a file
 with open(filename, 'a', encoding='utf-8') as f:

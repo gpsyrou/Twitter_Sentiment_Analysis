@@ -54,8 +54,8 @@ print(premium_search_args)
 
 
 # Set tweet extraction period and create a list of days of interest
-fromDate = "2020-02-10"
-toDate = "2020-02-17"
+fromDate = "2020-02-18"
+toDate = "2020-02-25"
 
 daysList = [fromDate]
 
@@ -80,12 +80,12 @@ for day in daysList:
                                 from_date=fromDate,
                                 to_date=toDate ,
                                 results_per_call = 100)
-    
+
         # Set up the stream
         rs = ResultStream(rule_payload=rule,
-                          max_results=100,
-                          **premium_search_args)
-    
+                            max_results=100,
+                            **premium_search_args)
+
         # Create a .jsonl with the results of the Stream query
         #file_date = datetime.now().strftime('%Y_%m_%d_%H_%M')
         file_date = '_'.join(hs).replace(' ', '').replace(':','')
@@ -151,7 +151,7 @@ allStopWords = list(stopwords.words('english'))
 spanish_stopwords = list(stopwords.words('spanish'))
 
 # Remove common words used in tweets plus the term that we used for the query
-commonTweeterStopwords = ['rt','retweet','#{0}'.format(data['search_query'])]
+commonTweeterStopwords = ['rt', 'retweet', 'new', 'via', '#{0}'.format(data['search_query']),'{0}'.format(data['search_query'])]
                           
 allStopWords.extend(commonTweeterStopwords + spanish_stopwords)
 num_list = '0123456789'
@@ -186,5 +186,6 @@ wordcloud = WordCloud().generate(gen_text)
 
 plt.imshow(wordcloud, interpolation='bilinear')
 plt.axis("off")
+plt.show()
 
 # Find bigrams

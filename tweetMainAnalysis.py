@@ -194,17 +194,27 @@ plt.show()
 allTweetsString = ' '.join([x for x in df['Tweet']])
 
 from nltk import word_tokenize
-from nltk.collocations import BigramCollocationFinder
+from nltk.collocations import BigramCollocationFinder, BigramAssocMeasures
 bigram_measures = BigramAssocMeasures()
 
 finder = BigramCollocationFinder.from_words(word_tokenize(allTweetsString))
 
 bigramDict = {}
-for k,v in finder.ngram_fd.items(): 
-    bigramDict[k] = v
+for k,v in finder.ngram_fd.items(): bigramDict[k] = v
 
+# Bigrams as a sorted dictionary
 sortedBiGrams = sorted(bigramDict.items(), key=lambda x: x[1], reverse=True)
 
+# BiGrams as a dataframe
+bigramDF = pd.DataFrame(bigramDict.items(), columns=['BiGram', 'Count'])
 
+
+# Visualise the top 20 BiGrams
+bg, counts = list(zip(*sortedBiGrams))
+bg_str = list(map(lambda x: '-'.join(x), bg))
+sns.barplot(bg_str, counts)
+
+
+# Sentiment analysis on tweets based on Liu Hu lexicon algorithm
 
 

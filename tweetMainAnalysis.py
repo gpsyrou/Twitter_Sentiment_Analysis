@@ -31,7 +31,7 @@ from searchtweets import ResultStream
 
 # Secure location of the required keys to connect to the API
 # This config also contains the search query
-json_loc = 'C:\\Users\\hz336yw\\Desktop\\Twitter\\twitter_config.json'
+json_loc = '/Users/georgiosspyrou/Desktop/config_tweets/Twitter/twitter_config.json'
 
 with open(json_loc) as json_file:
     data = json.load(json_file)
@@ -54,8 +54,8 @@ print(premium_search_args)
 
 
 # Set tweet extraction period and create a list of days of interest
-fromDate = "2020-02-02"
-toDate = "2020-02-15"
+fromDate = "2020-02-10"
+toDate = "2020-02-17"
 
 daysList = [fromDate]
 
@@ -99,8 +99,8 @@ for day in daysList:
                 if cntr % 100 == 0:
                     n_str, cr_date = str(cntr), tweet['created_at']
                     print(f'\n {n_str}: {cr_date}')
-                json.dump(tweet, f)
-                f.write('\n')
+                    json.dump(tweet, f)
+                    f.write('\n')
         print(f'Created file {f}:')
 
 # 3. Import the data from the created .jsonl file

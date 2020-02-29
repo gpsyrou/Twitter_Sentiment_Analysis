@@ -189,3 +189,22 @@ plt.axis("off")
 plt.show()
 
 # Find bigrams
+
+# First convert the list of tweets into one consecutive string
+allTweetsString = ' '.join([x for x in df['Tweet']])
+
+from nltk import word_tokenize
+from nltk.collocations import BigramCollocationFinder
+bigram_measures = BigramAssocMeasures()
+
+finder = BigramCollocationFinder.from_words(word_tokenize(allTweetsString))
+
+bigramDict = {}
+for k,v in finder.ngram_fd.items(): 
+    bigramDict[k] = v
+
+sortedBiGrams = sorted(bigramDict.items(), key=lambda x: x[1], reverse=True)
+
+
+
+

@@ -152,3 +152,41 @@ def createDateTimeFrame(day: str, hourSep: int) -> list:
         timeFrameList.append([datePart, incrementedDate])
     
     return timeFrameList
+
+def liu_hu_opinion_lexicon(sentence: str) -> str:
+    '''
+    Modified version of the Liu Hu opinion lexicon algorithm for sentiment
+    analysis on sentences.
+    Reference: https://www.nltk.org/_modules/nltk/sentiment/util.html#demo_liu_hu_lexicon
+    
+    The function has been modified to return the values instead of printing.
+    
+    Returns:
+    --------
+    Sentiment of a sentence, classified as 'Positive', 'Negative' or 'Neutral'
+    '''
+    
+    from nltk.corpus import opinion_lexicon
+    from nltk.tokenize import treebank
+
+    tokenizer = treebank.TreebankWordTokenizer()
+    pos_words, neg_words = 0,0
+    y = []
+    tokenized_sent = [word.lower() for word in tokenizer.tokenize(sentence)]
+
+    for word in tokenized_sent:
+        if word in opinion_lexicon.positive():
+            pos_words += 1
+            y.append(1)  # positive
+        elif word in opinion_lexicon.negative():
+            neg_words += 1
+            y.append(-1)  # negative
+        else:
+            y.append(0)  # neutral
+
+    if pos_words > neg_words:
+        return('Positive')
+    elif pos_words < neg_words:
+        return('Negative')
+    elif pos_words == neg_words:
+        return('Neutral')

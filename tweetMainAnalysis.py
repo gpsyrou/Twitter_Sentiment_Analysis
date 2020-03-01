@@ -160,6 +160,8 @@ plt.title(f'Plot of the top-{topn} pairs of words that appear next to each other
 plt.ylabel('Count')
 plt.show()
 
-# 4. Sentiment analysis on tweets based on Liu Hu lexicon algorithm
-
+# 4. Sentiment analysis on tweets based on Liu Hu opinion lexicon
+# Classify tweets as 'positive', 'negative' or 'neutral' based on the polarity
+# of the words present in a sentence.
+from nltk.sentiment.util import demo_liu_hu_lexicon
 

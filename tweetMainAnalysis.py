@@ -10,19 +10,17 @@
 
 # Import dependencies
 import os
+import json
 import pandas as pd
 
 # Plots and graphs
 import matplotlib.pyplot as plt
 import seaborn as sns
-import networkx as nx
-
-import json
 
 # Set up the project environment
 
 # Secure location of the required keys to connect to the API
-# This config also contains the search query
+# This config also contains the search query (in this case 'coronavirus')
 json_loc = '/Users/georgiosspyrou/Desktop/config_tweets/Twitter/twitter_config.json'
 
 with open(json_loc) as json_file:
@@ -45,7 +43,8 @@ allTweetsList = []
 
 for file in os.listdir(jsonl_files_folder):
     if 'twitter' in file:
-        tweets_full_list = twf.loadJsonlData(os.path.join(jsonl_files_folder,file))
+        tweets_full_list = twf.loadJsonlData(os.path.join(jsonl_files_folder,
+                                                          file))
         allTweetsList += tweets_full_list
 
 
@@ -64,13 +63,12 @@ for tweet_dict in allTweetsList:
     replyto_ls.append(tweet_dict['in_reply_to_user_id'])
     location_ls.append(tweet_dict['user']['location'])
     datetime_ls.append(tweet_dict['created_at'])
-    
+
 # Dataframe that contains the data for analysis
 # Note: The twitter API functionality is very broad in what data we can analyse
 # This project will focus on tweets and with their respective location/date.
 df = pd.DataFrame(list(zip(user_ls,userid_ls, tweet_ls,replyto_ls, location_ls, datetime_ls)), 
                   columns = ['Username','UserID','Tweet','Reply_to','Location', 'Date'])
-
 
 # Remove tweets that they did not have any text
 df = df[df['Tweet'].notnull()]

@@ -108,7 +108,7 @@ mostCommontweets.head()
 twf.plotMostCommonWords(mostCommontweets)
 
 
-# 2. WordCloud viz
+# 2. WordCloud vizualisation
 from wordcloud import WordCloud
 
 plt.figure(figsize=(10,10))
@@ -119,33 +119,47 @@ plt.imshow(wordcloud, interpolation='bilinear')
 plt.axis("off")
 plt.show()
 
-# Find bigrams
+# 3. Find bigrams (pairs of words that frequently appear next to each other)
 
 # First convert the list of tweets into one consecutive string
 allTweetsString = ' '.join([x for x in df['Tweet']])
 
 from nltk import word_tokenize
 from nltk.collocations import BigramCollocationFinder, BigramAssocMeasures
+
 bigram_measures = BigramAssocMeasures()
 
 finder = BigramCollocationFinder.from_words(word_tokenize(allTweetsString))
 
 bigramDict = {}
-for k,v in finder.ngram_fd.items(): bigramDict[k] = v
+for k,v in finder.ngram_fd.items():
+    # We have a condition as we need to avoid characters like '@' and '#'
+    if len(k[0]) > 1 and len(k[1]) > 1 and "'s" not in k:
+        bigramDict[k] = v
+    else:
+        continue
+
+# Choose number of bigrams than we want to investigate
+topn = 30 #len(bigramDict) -- > if we want all
 
 # Bigrams as a sorted dictionary
-sortedBiGrams = sorted(bigramDict.items(), key=lambda x: x[1], reverse=True)
+sortedBiGrams = sorted(bigramDict.items(),
+                       key=lambda x: x[1], reverse=True)[0:topn]
 
 # BiGrams as a dataframe
 bigramDF = pd.DataFrame(bigramDict.items(), columns=['BiGram', 'Count'])
 
-
 # Visualise the top 20 BiGrams
-bg, counts = list(zip(*sortedBiGrams))
-bg_str = list(map(lambda x: '-'.join(x), bg))
-sns.barplot(bg_str, counts)
+bgram, counts = list(zip(*sortedBiGrams))
+bgstring = list(map(lambda txt: '-'.join(txt), bgram))
 
+plt.figure(figsize=(10,10))
+g = sns.barplot(bgstring, counts, palette='muted')
+g.set_xticklabels(g.get_xticklabels(), rotation=80)
+plt.title(f'Plot of the top-{topn} pairs of words that appear next to each other')
+plt.ylabel('Count')
+plt.show()
 
-# Sentiment analysis on tweets based on Liu Hu lexicon algorithm
+# 4. Sentiment analysis on tweets based on Liu Hu lexicon algorithm
 
 

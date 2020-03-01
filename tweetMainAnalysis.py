@@ -45,7 +45,6 @@ allTweetsList = []
 
 for file in os.listdir(jsonl_files_folder):
     if 'twitter' in file:
-        print(file)
         tweets_full_list = twf.loadJsonlData(os.path.join(jsonl_files_folder,file))
         allTweetsList += tweets_full_list
 
@@ -55,20 +54,22 @@ for file in os.listdir(jsonl_files_folder):
 # Create a dataframe based on the relevant data from the full list of received
 # tweets
 
-user_ls, tweet_ls = [], []
-location_ls, datetime_ls = [], []
+user_ls, userid_ls, tweet_ls = [], [], []
+location_ls, datetime_ls, replyto_ls = [], [], []
 
 for tweet_dict in allTweetsList:
     user_ls.append(tweet_dict['user']['screen_name'])
+    userid_ls.append(tweet_dict['user']['id'])
     tweet_ls.append(twf.removeURL(tweet_dict['text']))
+    replyto_ls.append(tweet_dict['in_reply_to_user_id'])
     location_ls.append(tweet_dict['user']['location'])
     datetime_ls.append(tweet_dict['created_at'])
     
 # Dataframe that contains the data for analysis
 # Note: The twitter API functionality is very broad in what data we can analyse
 # This project will focus on tweets and with their respective location/date.
-df = pd.DataFrame(list(zip(user_ls, tweet_ls, location_ls, datetime_ls)), 
-                  columns = ['Username','Tweet','Location', 'Date'])
+df = pd.DataFrame(list(zip(user_ls,userid_ls, tweet_ls,replyto_ls, location_ls, datetime_ls)), 
+                  columns = ['Username','UserID','Tweet','Reply_to','Location', 'Date'])
 
 
 # Remove tweets that they did not have any text

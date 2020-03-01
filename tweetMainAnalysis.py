@@ -11,7 +11,6 @@
 # Import dependencies
 import os
 import pandas as pd
-import numpy as np
 
 # Plots and graphs
 import matplotlib.pyplot as plt
@@ -19,15 +18,10 @@ import seaborn as sns
 import networkx as nx
 
 import json
-from datetime  import datetime, timedelta
 
-# Twitter related
-import tweepy as tw
-from searchtweets import load_credentials
-from searchtweets import gen_rule_payload
-from searchtweets import ResultStream
+import twitterCustomFunc as twf
 
-# 1. Set up the project environment
+# Set up the project environment
 
 # Secure location of the required keys to connect to the API
 # This config also contains the search query
@@ -39,74 +33,10 @@ with open(json_loc) as json_file:
 # Project folder location and keys
 os.chdir(data["project_directory"])
 
-# 2. Import the custom functions that we will use to retrieve and analyse
-#    the data, and use the API to save the data to a .jsonl file.
-
-import twitterCustomFunc as twf
-
-twitter_keys_loc = data["keys"]
-
-# Load the credentials to get access to the API
-premium_search_args = load_credentials(twitter_keys_loc,
-                                       yaml_key="search_tweets_api",
-                                       env_overwrite=False)
-print(premium_search_args)
-
-
-# Set tweet extraction period and create a list of days of interest
-fromDate = "2020-02-18"
-toDate = "2020-02-25"
-
-daysList = [fromDate]
-
-while fromDate != toDate:
-    date = datetime.strptime(fromDate, "%Y-%m-%d")
-    mod_date = date + timedelta(days=1)
-    incrementedDay = datetime.strftime(mod_date, "%Y-%m-%d")
-    daysList.append(incrementedDay)
-    
-    fromDate = incrementedDay
-
-# Retrieve the data for each day from the API
-for day in daysList:
-    
-    dayNhourList = twf.createDateTimeFrame(day, hourSep=2)
-    
-    for hs in dayNhourList:
-        fromDate = hs[0]
-        toDate = hs[1]
-        # Create the searching rule for the stream
-        rule = gen_rule_payload(pt_rule=data['search_query'],
-                                from_date=fromDate,
-                                to_date=toDate ,
-                                results_per_call = 100)
-
-        # Set up the stream
-        rs = ResultStream(rule_payload=rule,
-                            max_results=100,
-                            **premium_search_args)
-
-        # Create a .jsonl with the results of the Stream query
-        #file_date = datetime.now().strftime('%Y_%m_%d_%H_%M')
-        file_date = '_'.join(hs).replace(' ', '').replace(':','')
-        filename = os.path.join(data["outputFiles"],f'twitter_30day_results_{file_date}.jsonl')
-    
-        # Write the data received from the API to a file
-        with open(filename, 'a', encoding='utf-8') as f:
-            cntr = 0
-            for tweet in rs.stream():
-                cntr += 1
-                if cntr % 100 == 0:
-                    n_str, cr_date = str(cntr), tweet['created_at']
-                    print(f'\n {n_str}: {cr_date}')
-                    json.dump(tweet, f)
-                    f.write('\n')
-        print(f'Created file {f}:')
-
-# 3. Import the data from the created .jsonl file
+# Import the data from the created .jsonl files
 
 # Read the data from the jsonl files
-jsonl_files_folder = os.path.join(data["project_directory"],data["outputFiles"])
+jsonl_files_folder = os.path.join(data["project_directory"], data["outputFiles"])
 
 # List that will contain all the Tweets that we managed to receive
 # via the use of the API
@@ -118,13 +48,11 @@ for file in os.listdir(jsonl_files_folder):
     allTweetsList += tweets_full_list
 
 
-############# Data Retrieval - end ##########################
+# Main exploratory data analysis on the data received from the API.
 
+# Create a dataframe based on the relevant data from the full list of received
+# tweets
 
-
-# 4. Main exploratory data analysis on the data received from the API.
-
-# Create a dataframe based on the relevant data from tweets_full_list
 user_ls, tweet_ls = [], []
 location_ls, datetime_ls = [], []
 
@@ -151,7 +79,10 @@ allStopWords = list(stopwords.words('english'))
 spanish_stopwords = list(stopwords.words('spanish'))
 
 # Remove common words used in tweets plus the term that we used for the query
-commonTweeterStopwords = ['rt', 'retweet', 'new', 'via', '#{0}'.format(data['search_query']),'{0}'.format(data['search_query'])]
+commonTweeterStopwords = ['rt', 'retweet', 'new', 'via','us','u','2019',
+                          'coronavírus',
+                          '#{0}'.format(data['search_query']),
+                          '{0}'.format(data['search_query'])]
                           
 allStopWords.extend(commonTweeterStopwords + spanish_stopwords)
 num_list = '0123456789'

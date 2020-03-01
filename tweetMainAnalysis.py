@@ -163,5 +163,17 @@ plt.show()
 # 4. Sentiment analysis on tweets based on Liu Hu opinion lexicon
 # Classify tweets as 'positive', 'negative' or 'neutral' based on the polarity
 # of the words present in a sentence.
-from nltk.sentiment.util import demo_liu_hu_lexicon
+sentimentDF = df[1:500].copy()
 
+sentimentDF['Sentiment'] = sentimentDF['Tweet'].apply(lambda tweet:
+                                                      twf.liu_hu_opinion_lexicon(tweet))
+
+# Vizualise the results
+plt.figure(figsize=(10,10))
+g = sns.countplot(x=sentimentDF['Sentiment'], data=sentimentDF,
+                  palette = 'deep')
+g.set_xticklabels(g.get_xticklabels(), rotation=0)
+plt.title(f'Classification of tweets based on Liu-Hu opinion lexicon')
+plt.ylabel('Count', labelpad = 8)
+plt.xlabel('Sentiment', labelpad = 8)
+plt.show()

@@ -163,7 +163,7 @@ plt.show()
 # 4. Sentiment analysis on tweets based on Liu Hu opinion lexicon
 # Classify tweets as 'positive', 'negative' or 'neutral' based on the polarity
 # of the words present in a sentence.
-sentimentDF = df[1:500].copy()
+sentimentDF = df.copy()
 
 sentimentDF['Sentiment'] = sentimentDF['Tweet'].apply(lambda tweet:
                                                       twf.liu_hu_opinion_lexicon(tweet))

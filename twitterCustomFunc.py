@@ -12,6 +12,7 @@
 import re
 import string
 import pandas as pd
+import json
 import json_lines
 import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
@@ -35,8 +36,11 @@ def loadJsonlData(file: str) -> list:
     tweets = []
     with open(file, 'rb') as f:
         for tweet in json_lines.reader(f, broken=True):
-            tweets.append(tweet)
-    return (tweets)
+            try:
+                tweets.append(tweet)
+            except json_lines.UnicodeDecodeError or json.JSONDecodeError:
+                pass
+        return (tweets)
 
 
 def removeURL(text: str) -> str:

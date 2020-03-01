@@ -19,8 +19,6 @@ import networkx as nx
 
 import json
 
-import twitterCustomFunc as twf
-
 # Set up the project environment
 
 # Secure location of the required keys to connect to the API
@@ -33,6 +31,8 @@ with open(json_loc) as json_file:
 # Project folder location and keys
 os.chdir(data["project_directory"])
 
+import twitterCustomFunc as twf
+
 # Import the data from the created .jsonl files
 
 # Read the data from the jsonl files
@@ -44,8 +44,10 @@ jsonl_files_folder = os.path.join(data["project_directory"], data["outputFiles"]
 allTweetsList = []
 
 for file in os.listdir(jsonl_files_folder):
-    tweets_full_list = twf.loadJsonlData(os.path.join(jsonl_files_folder,file))
-    allTweetsList += tweets_full_list
+    if 'twitter' in file:
+        print(file)
+        tweets_full_list = twf.loadJsonlData(os.path.join(jsonl_files_folder,file))
+        allTweetsList += tweets_full_list
 
 
 # Main exploratory data analysis on the data received from the API.

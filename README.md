@@ -1,4 +1,4 @@
-## Twitter_Topic_Modelling
+## Twitter Topic Modelling and Sentiment Analysis
 
 ### Topic: Analysis of Coronavirus related Tweets using TwitterAPI
 

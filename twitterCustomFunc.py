@@ -40,7 +40,8 @@ def loadJsonlData(file: str) -> list:
                 tweets.append(tweet)
             except json_lines.UnicodeDecodeError or json.JSONDecodeError:
                 pass
-        return (tweets)
+
+        return tweets
 
 
 def removeURL(text: str) -> str:

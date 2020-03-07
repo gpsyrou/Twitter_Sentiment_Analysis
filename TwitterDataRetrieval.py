@@ -28,17 +28,17 @@ from searchtweets import ResultStream
 json_loc = '/Users/georgiosspyrou/Desktop/config_tweets/Twitter/twitter_config.json'
 
 with open(json_loc) as json_file:
-    data = json.load(json_file)
+    configFile = json.load(json_file)
 
 # Project folder location and keys
-os.chdir(data["project_directory"])
+os.chdir(configFile["project_directory"])
 
 # Import the custom functions that we will use to retrieve and analyse
 # the data, and use the API to save the data to a .jsonl file.
 
 import twitterCustomFunc as twf
 
-twitter_keys_loc = data["keys"]
+twitter_keys_loc = configFile["keys"]
 
 # Load the credentials to get access to the API
 premium_search_args = load_credentials(twitter_keys_loc,
@@ -48,8 +48,8 @@ print(premium_search_args)
 
 
 # Set tweet extraction period and create a list of days of interest
-fromDate = "2020-02-21"
-toDate = "2020-02-25"
+fromDate = "2020-02-10"
+toDate = "2020-02-12"
 
 daysList = [fromDate]
 
@@ -70,7 +70,7 @@ for day in daysList:
         fromDate = hs[0]
         toDate = hs[1]
         # Create the searching rule for the stream
-        rule = gen_rule_payload(pt_rule=data['search_query'],
+        rule = gen_rule_payload(pt_rule=configFile['search_query'],
                                 from_date=fromDate,
                                 to_date=toDate ,
                                 results_per_call = 100)
@@ -83,7 +83,8 @@ for day in daysList:
         # Create a .jsonl with the results of the Stream query
         #file_date = datetime.now().strftime('%Y_%m_%d_%H_%M')
         file_date = '_'.join(hs).replace(' ', '').replace(':','')
-        filename = os.path.join(data["outputFiles"],f'twitter_30day_results_{file_date}.jsonl')
+        filename = os.path.join(configFile["outputFiles"],
+                                f'twitter_30day_results_{file_date}.jsonl')
     
         # Write the data received from the API to a file
         with open(filename, 'a', encoding='utf-8') as f:

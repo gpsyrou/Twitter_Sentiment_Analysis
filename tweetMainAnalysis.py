@@ -33,17 +33,18 @@ from nltk.corpus import stopwords
 json_loc = '/Users/georgiosspyrou/Desktop/config_tweets/Twitter/twitter_config.json'
 
 with open(json_loc) as json_file:
-    data = json.load(json_file)
+    configFile = json.load(json_file)
 
 # Project folder location and keys
-os.chdir(data["project_directory"])
+os.chdir(configFile["project_directory"])
 
 import twitterCustomFunc as twf
 
 # Import the data from the created .jsonl files
 
 # Read the data from the jsonl files
-jsonl_files_folder = os.path.join(data["project_directory"], data["outputFiles"])
+jsonl_files_folder = os.path.join(configFile["project_directory"],
+                                  configFile["outputFiles"])
 
 # List that will contain all the Tweets that we managed to receive
 # via the use of the API
@@ -84,15 +85,27 @@ df = pd.DataFrame(list(zip(user_ls, userid_ls, tweet_ls,
 # Remove tweets that they did not have any text
 df = df[df['Tweet'].notnull()]
 
+# Detect language and translate if necessary
+from googletrans import Translator
+
+def translateTweet(text):
+    translator = Translator(service_urls=['translate.google.com'])
+    try:
+        textTranslated = translator.translate(text, dest='en').text
+    except json.JSONDecodeError:
+        textTranslated = text
+        pass
+    return textTranslated
+
+df['Tweet'] = df['Tweet'].apply(lambda text: translateTweet(text))
+
 # Remove punctuation and stop words
 allStopWords = list(stopwords.words('english'))
 spanish_stopwords = list(stopwords.words('spanish'))
 
 # Remove common words used in tweets plus the term that we used for the query
 commonTweeterStopwords = ['rt', 'retweet', 'new', 'via', 'us', 'u', '2019',
-                          'coronavírus',
-                          '#{0}'.format(data['search_query']),
-                          '{0}'.format(data['search_query'])]
+                          'coronavírus','coronavirus','#coronavirus' ]
 
 allStopWords.extend(commonTweeterStopwords + spanish_stopwords)
 num_list = '0123456789'

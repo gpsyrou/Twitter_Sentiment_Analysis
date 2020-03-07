@@ -146,7 +146,7 @@ def createDateTimeFrame(day: str, hourSep: int) -> list:
     #TODO: make hourDivisionsList a parameter
     
     '''
-    hourDivisionsList = ['09:00', '15:00', '19:00', '21:00']
+    hourDivisionsList = ['07:30', '12:30', '15:30','17:30', '22:30']
     timeFrameList = []
     for tframe in hourDivisionsList:
         datePart = day + f' {tframe}'

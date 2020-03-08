@@ -1,54 +1,35 @@
-from plotly.offline import plot
-import pandas as pd
+
+def createTweetWorldMap(df):
+    import plotly.graph_objects as go
+    
+    fig = go.Figure(data=go.Scattergeo(lon = df['Longitude'],
+                                       lat = df['Latitude'],
+                                       text = df['Tweet'],
+                                       mode = 'markers',
+                                       marker = dict(
+                                     			symbol = 'circle',
+                                     			line = dict(
+                                     						width=1,
+                                     						color='rgba(102, 102, 102)'
+                                     						),
+                                     			colorscale = 'Viridis',
+                                     			cmin = 0,
+            )))
+    
+    fig.update_layout(title = 'COVID-19 related Tweets across the world (January 2020 - March 2020) ',
+                      geo_scope='world',
+                      			geo = dict(
+            			resolution = 110,
+            			scope = 'world',
+    					showland = True,
+    					landcolor = "rgb(250, 250, 250)",
+    					subunitcolor = "rgb(217, 217, 217)",
+    					countrycolor = "rgb(217, 217, 217)",
+    					countrywidth = 0.6,
+    					subunitwidth = 0.6,
+    					))
+    return fig
 
 
-#make a data dictionary
-data = [dict(
-			type = 'scattergeo',
-			lon = dftemp['Longitude'],
-			lat = dftemp['Latitude'],
-			mode = 'markers',
-			marker = dict(
-			symbol = 'circle',
-			line = dict(
-						width=1,
-						color='rgba(102, 102, 102)'
-						),
-			colorscale = 'Viridis',
-			cmin = 0,
-        ))]
 
-#define the layout
-layout = dict(
-			title = 'Tweets over the world',
-			geo = dict(
-        			resolution = 50,
-        			scope = 'world',
-					showland = True,
-					landcolor = "rgb(250, 250, 250)",
-					subunitcolor = "rgb(217, 217, 217)",
-					countrycolor = "rgb(217, 217, 217)",
-					countrywidth = 0.5,
-					subunitwidth = 0.5,
-					center = dict(
-								lon = 39.0,
-								lat = 21.8
-								),
-					projection = dict(
-								scale = 0.05
-								),
-					lonaxis = dict(
-								 range= [ -127.0, -114.0 ]
-								 ),
-					lataxis = dict(
-								 range= [ 35.0, 38.0 ] 
-								 ),
-					),
-			)
-#add data and layout to figure
-fig = dict(
-		data=data,
-		layout=layout
-		)
-#plot
-plot(fig)
+

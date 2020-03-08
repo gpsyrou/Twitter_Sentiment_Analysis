@@ -8,7 +8,7 @@
 -------------------------------------------------------------------
 """
 
-# Import dependencies
+# Import dependenciescle
 import os
 import json
 import pandas as pd
@@ -29,6 +29,8 @@ from nltk.corpus import stopwords
 from geopy.geocoders import Nominatim
 from geopy.extra.rate_limiter import RateLimiter
 
+from plotly.offline import plot
+
 # Set up the project environment
 
 # Secure location of the required keys to connect to the API
@@ -42,6 +44,7 @@ with open(json_loc) as json_file:
 os.chdir(configFile["project_directory"])
 
 import twitterCustomFunc as twf
+import plotWorldMap as pmap
 
 # Import the data from the created .jsonl files
 
@@ -113,12 +116,12 @@ for batch in range(0, df.shape[0], step):
                                    loc: twf.getValidCoordinates(loc, geolocator))
 
 
-dftemp = df[df['Point'].notnull()]
-dftemp['Latitude'] = dftemp['Point'].apply(lambda x: x[0])
-dftemp['Longitude'] = dftemp['Point'].apply(lambda x: x[1])
+dfWithCoords = df[df['Point'].notnull()]
+dfWithCoords['Latitude'] = dfWithCoords['Point'].apply(lambda x: x[0])
+dfWithCoords['Longitude'] = dfWithCoords['Point'].apply(lambda x: x[1])
 
-
-
+fig = pmap.createTweetWorldMap(dfWithCoords)
+plot(fig)
 
 # Detect language and translate if necessary
 df['Tweet'] = df['Tweet'].apply(lambda text: twf.translateTweet(text))

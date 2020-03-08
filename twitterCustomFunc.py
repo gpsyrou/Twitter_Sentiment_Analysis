@@ -117,7 +117,7 @@ def plotMostCommonWords(counterDataFrame: pd.core.frame.DataFrame) ->list:
     '''
     Plot the most common words that appear in a corpus.
     
-    Args:
+    Args:df
     ----
     counterDataFrame: Dataframe
             Contains a dataframe of the form ['word','count'] 

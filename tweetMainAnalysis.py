@@ -115,7 +115,6 @@ for batch in range(0, df.shape[0], step):
     df['Point'] = df['Location'][batch:batchstep].apply(lambda 
                                    loc: twf.getValidCoordinates(loc, geolocator))
 
-
 dfWithCoords = df[df['Point'].notnull()]
 dfWithCoords['Latitude'] = dfWithCoords['Point'].apply(lambda x: x[0])
 dfWithCoords['Longitude'] = dfWithCoords['Point'].apply(lambda x: x[1])

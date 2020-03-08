@@ -31,11 +31,11 @@ layout = dict(
 					countrywidth = 0.5,
 					subunitwidth = 0.5,
 					center = dict(
-								lon = -121.0,
-								lat = 35.0
+								lon = 39.0,
+								lat = 21.8
 								),
 					projection = dict(
-								scale = 0.4
+								scale = 0.05
 								),
 					lonaxis = dict(
 								 range= [ -127.0, -114.0 ]

@@ -99,7 +99,7 @@ df.drop(columns=['index'], inplace = True)
 geolocator = Nominatim(user_agent="https://developer.twitter.com/en/apps/17403833") 
    
 geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1,
-                      max_retries=5, error_wait_seconds=10)
+                      max_retries=3, error_wait_seconds=2)
 
 # Split it in batches and identify the locations
 step = 100
@@ -108,9 +108,16 @@ for batch in range(0, df.shape[0], step):
     batchstep = batch+step
     if batchstep > df.shape[0]:
         batchstep = batch + (df.shape[0]%step)
-    print(f'Calculating batch: {batch}-{batchstep}\n')
+    print(f'\nCalculating batch: {batch}-{batchstep}\n')
     df['Point'] = df['Location'][batch:batchstep].apply(lambda 
                                    loc: twf.getValidCoordinates(loc, geolocator))
+
+
+dftemp = df[df['Point'].notnull()]
+dftemp['Latitude'] = dftemp['Point'].apply(lambda x: x[0])
+dftemp['Longitude'] = dftemp['Point'].apply(lambda x: x[1])
+
+
 
 
 # Detect language and translate if necessary

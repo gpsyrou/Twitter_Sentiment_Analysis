@@ -18,3 +18,4 @@
 5) https://www.kaggle.com/caractacus/thematic-text-analysis-using-spacy-networkx
 6) https://towardsdatascience.com/the-next-level-of-data-visualization-in-python-dd6e99039d5e
 7) https://developer.twitter.com/en/docs/tweets/search/overview/premium
+8) https://geopy.readthedocs.io/en/latest/#geopy.extra.rate_limiter.RateLimiter

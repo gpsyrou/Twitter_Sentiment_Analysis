@@ -26,6 +26,9 @@ from nltk.collocations import BigramCollocationFinder, BigramAssocMeasures
 
 from nltk.corpus import stopwords
 
+from geopy.geocoders import Nominatim
+from geopy.extra.rate_limiter import RateLimiter
+
 # Set up the project environment
 
 # Secure location of the required keys to connect to the API
@@ -65,6 +68,7 @@ for file in os.listdir(jsonl_files_folder):
 
 user_ls, userid_ls, tweet_ls = [], [], []
 location_ls, datetime_ls, replyto_ls = [], [], []
+geo_loc_ls = []
 
 for tweet_dict in allTweetsList:
     user_ls.append(tweet_dict['user']['screen_name'])
@@ -73,31 +77,44 @@ for tweet_dict in allTweetsList:
     replyto_ls.append(tweet_dict['in_reply_to_user_id'])
     location_ls.append(tweet_dict['user']['location'])
     datetime_ls.append(tweet_dict['created_at'])
+    geo_loc_ls.append(tweet_dict['geo'])
 
 # Dataframe that contains the data for analysis
 # Note: The twitter API functionality is very broad in what data we can analyse
 # This project will focus on tweets and with their respective location/date.
 df = pd.DataFrame(list(zip(user_ls, userid_ls, tweet_ls,
-                           replyto_ls, location_ls, datetime_ls)),
+                           replyto_ls, location_ls, datetime_ls, geo_loc_ls)),
                   columns=['Username', 'UserID', 'Tweet',
-                           'Reply_to', 'Location', 'Date'])
+                           'Reply_to', 'Location', 'Date', 'Coordinates'])
 
 # Remove tweets that they did not have any text
-df = df[df['Tweet'].notnull()]
+df = df[df['Tweet'].notnull()].reset_index()
+df.drop(columns=['index'], inplace = True)
+
+# Unfortunately TwitterAPI doesn't give much information regarding coordinates.
+# But we can try to find the geolocation (long/lat) through the use of geopy
+# Geopy has a limit in the times we can call it per second so we have to find
+# a workaround
+
+geolocator = Nominatim(user_agent="https://developer.twitter.com/en/apps/17403833") 
+   
+geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1,
+                      max_retries=5, error_wait_seconds=10)
+
+# Split it in batches and identify the locations
+step = 100
+
+for batch in range(0, df.shape[0], step):
+    batchstep = batch+step
+    if batchstep > df.shape[0]:
+        batchstep = batch + (df.shape[0]%step)
+    print(f'Calculating batch: {batch}-{batchstep}\n')
+    df['Point'] = df['Location'][batch:batchstep].apply(lambda 
+                                   loc: twf.getValidCoordinates(loc, geolocator))
+
 
 # Detect language and translate if necessary
-from googletrans import Translator
-
-def translateTweet(text):
-    translator = Translator(service_urls=['translate.google.com'])
-    try:
-        textTranslated = translator.translate(text, dest='en').text
-    except json.JSONDecodeError:
-        textTranslated = text
-        pass
-    return textTranslated
-
-df['Tweet'] = df['Tweet'].apply(lambda text: translateTweet(text))
+df['Tweet'] = df['Tweet'].apply(lambda text: twf.translateTweet(text))
 
 # Remove punctuation and stop words
 allStopWords = list(stopwords.words('english'))

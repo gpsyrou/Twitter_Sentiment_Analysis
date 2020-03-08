@@ -12,11 +12,19 @@
 import re
 import string
 import pandas as pd
+from datetime import datetime, timedelta
+
 import json
 import json_lines
+
 import matplotlib.pyplot as plt
-from datetime import datetime, timedelta
+
 from nltk.tokenize import TweetTokenizer
+from googletrans import Translator
+
+from geopy.geocoders import Nominatim
+from geopy.extra.rate_limiter import RateLimiter
+from geopy.exc import GeocoderTimedOut
 
 
 def loadJsonlData(file: str) -> list:
@@ -195,3 +203,39 @@ def liu_hu_opinion_lexicon(sentence: str) -> str:
         return('Negative')
     elif pos_words == neg_words:
         return('Neutral')
+    
+def translateTweet(text: str) -> str:
+    '''
+    If Tweets are written in any other language than English, translate to
+    English and return the translated string.
+    '''
+    translator = Translator(service_urls=['translate.google.com'])
+    try:
+        textTranslated = translator.translate(text, dest='en').text
+    except json.JSONDecodeError:
+        textTranslated = text
+        pass
+    return textTranslated
+
+
+def getValidCoordinates(location: str, geolocator: Nominatim) -> list:
+    '''
+    Given a string which is pointing to specific location (e.g. 'London'),
+    return the Latitude and Longitude coordinates of each entry. 
+    If an entry does not correspond to a place (e.g. 'abcdef') then we return None.
+    '''
+    
+    try:
+        if location is not None:
+            print(f'Location:.... {location}')
+            try:
+                coordinates = geolocator.geocode(location)
+                lat = coordinates.point[0]
+                long = coordinates.point[1]
+                return [lat, long]
+            except AttributeError:
+                return None
+        else:
+            pass
+    except GeocoderTimedOut:
+        return getValidCoordinates(location, geolocator)

@@ -17,10 +17,13 @@ def createTweetWorldMap(df: pd.core.frame.DataFrame):
     '''
     Given dataframe that contains columns corresponding to Longitude and Latitude,
     create a world map plot and mark the Tweet locations on the map.
+    
     '''
+    df['Text'] = df['Date'] + ': \n' + df['Tweet']
+    
     fig = go.Figure(data=go.Scattergeo(lon = df['Longitude'],
                                        lat = df['Latitude'],
-                                       text = df['Tweet'],
+                                       text = df['Text'],
                                        mode = 'markers',
                                        marker = dict(
                                      			symbol = 'circle',

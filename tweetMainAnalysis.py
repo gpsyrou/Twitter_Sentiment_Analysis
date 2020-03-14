@@ -116,10 +116,10 @@ geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1,
 # Split it in batches and identify the locations
 step = 100
 
-for batch in range(0, 500, step):
+for batch in range(0, df.shape[0], step):
     batchstep = batch+step
     if batchstep > df.shape[0]:
-        batchstep = batch + (500%step)
+        batchstep = batch + (df.shape[0]%step)
     print(f'\nCalculating batch: {batch}-{batchstep}\n')
     df['Point'] = df['Location'][batch:batchstep].apply(lambda 
                                    loc: twf.getValidCoordinates(loc, geolocator))

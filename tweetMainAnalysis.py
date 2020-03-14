@@ -94,6 +94,15 @@ df = pd.DataFrame(list(zip(user_ls, userid_ls, tweet_ls,
 df = df[df['Tweet'].notnull()].reset_index()
 df.drop(columns=['index'], inplace = True)
 
+
+# Detect language and translate if necessary
+df['Tweet'] = df['Tweet'].apply(lambda text: twf.translateTweet(text))
+
+''' USE THE BELOW IF WE WANT TO AVOID RE-TRANSLATING
+df = pd.read_csv('tweetsdata20200314.csv', sep='\t',
+                 encoding = 'utf-8', index_col=0)
+'''
+
 # Unfortunately TwitterAPI doesn't give much information regarding coordinates.
 # But we can try to find the geolocation (long/lat) through the use of geopy
 # Geopy has a limit in the times we can call it per second so we have to find
@@ -107,10 +116,10 @@ geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1,
 # Split it in batches and identify the locations
 step = 100
 
-for batch in range(0, df.shape[0], step):
+for batch in range(0, 500, step):
     batchstep = batch+step
     if batchstep > df.shape[0]:
-        batchstep = batch + (df.shape[0]%step)
+        batchstep = batch + (500%step)
     print(f'\nCalculating batch: {batch}-{batchstep}\n')
     df['Point'] = df['Location'][batch:batchstep].apply(lambda 
                                    loc: twf.getValidCoordinates(loc, geolocator))
@@ -122,8 +131,7 @@ dfWithCoords['Longitude'] = dfWithCoords['Point'].apply(lambda x: x[1])
 fig = pmap.createTweetWorldMap(dfWithCoords)
 plot(fig)
 
-# Detect language and translate if necessary
-df['Tweet'] = df['Tweet'].apply(lambda text: twf.translateTweet(text))
+
 
 # Remove punctuation and stop words
 allStopWords = list(stopwords.words('english'))

@@ -48,14 +48,14 @@ print(premium_search_args)
 
 
 # Set tweet extraction period and create a list of days of interest
-fromDate = "2020-02-10"
-toDate = "2020-02-12"
+fromDate = "2020-03-02"
+toDate = "2020-03-10"
 
 daysList = [fromDate]
 
 while fromDate != toDate:
     date = datetime.strptime(fromDate, "%Y-%m-%d")
-    mod_date = date + timedelta(days=1)
+    mod_date = date + timedelta(days=2)
     incrementedDay = datetime.strftime(mod_date, "%Y-%m-%d")
     daysList.append(incrementedDay)
     

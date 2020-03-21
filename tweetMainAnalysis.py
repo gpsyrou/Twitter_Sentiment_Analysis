@@ -196,9 +196,6 @@ topn = 30  # len(bigramDict) -- > if we want all
 sortedBiGrams = sorted(bigramDict.items(),
                        key=lambda x: x[1], reverse=True)[0:topn]
 
-# BiGrams as a dataframe
-bigramDF = pd.DataFrame(bigramDict.items(), columns=['BiGram', 'Count'])
-
 # Visualise the top 20 BiGrams
 bgram, counts = list(zip(*sortedBiGrams))
 bgstring = list(map(lambda txt: '-'.join(txt), bgram))

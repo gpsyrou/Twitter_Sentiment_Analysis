@@ -10,7 +10,7 @@
 """
 
 import pandas as pd
-import plotly.graph_objects as go
+from plotly import graph_objs as go
 
 
 def createTweetWorldMap(df: pd.core.frame.DataFrame):

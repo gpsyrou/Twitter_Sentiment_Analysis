@@ -25,7 +25,7 @@ from searchtweets import ResultStream
 
 # Secure location of the required keys to connect to the API
 # This config also contains the search query
-json_loc = '/Users/georgiosspyrou/Desktop/config_tweets/Twitter/twitter_config.json'
+json_loc = 'C:\\Users\\george\\Desktop\\Twitter_Project\\Twitter\\twitter_config.json'
 
 with open(json_loc) as json_file:
     configFile = json.load(json_file)

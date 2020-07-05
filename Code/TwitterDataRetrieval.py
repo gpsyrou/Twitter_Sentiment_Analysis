@@ -36,7 +36,7 @@ os.chdir(configFile["project_directory"])
 # Import the custom functions that we will use to retrieve and analyse
 # the data, and use the API to save the data to a .jsonl file.
 
-import twitterCustomFunc as twf
+import Code.twitterCustomFunc as twf
 
 twitter_keys_loc = configFile["keys"]
 
@@ -48,14 +48,14 @@ print(premium_search_args)
 
 
 # Set tweet extraction period and create a list of days of interest
-fromDate = "2020-03-12"
-toDate = "2020-03-18"
+fromDate = "2020-04-01"
+toDate = "2020-04-03"
 
 daysList = [fromDate]
 
 while fromDate != toDate:
     date = datetime.strptime(fromDate, "%Y-%m-%d")
-    mod_date = date + timedelta(days=2)
+    mod_date = date + timedelta(days=1)
     incrementedDay = datetime.strftime(mod_date, "%Y-%m-%d")
     daysList.append(incrementedDay)
     

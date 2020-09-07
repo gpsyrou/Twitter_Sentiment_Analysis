@@ -25,7 +25,7 @@ from searchtweets import ResultStream
 
 # Secure location of the required keys to connect to the API
 # This config also contains the search query
-json_loc = 'C:\\Users\\george\\Desktop\\Twitter_Project\\Twitter\\twitter_config.json'
+json_loc = r'D:\GitHub\Projects\Twitter_Project\Twitter\twitter_config.json'
 
 with open(json_loc) as json_file:
     configFile = json.load(json_file)
@@ -36,7 +36,7 @@ os.chdir(configFile["project_directory"])
 # Import the custom functions that we will use to retrieve and analyse
 # the data, and use the API to save the data to a .jsonl file.
 
-import Code.twitterCustomFunc as twf
+import twitterCustomFunc as twf
 
 twitter_keys_loc = configFile["keys"]
 

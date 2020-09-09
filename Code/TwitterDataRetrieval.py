@@ -12,11 +12,10 @@
 
 # Import dependencies
 import os
-
 import json
 from datetime  import datetime, timedelta
 
-# Twitter related
+# Twitter API
 from searchtweets import load_credentials
 from searchtweets import gen_rule_payload
 from searchtweets import ResultStream
@@ -38,18 +37,18 @@ os.chdir(configFile["project_directory"])
 
 import Code.twitterCustomFunc as twf
 
-keys_location_yaml = configFile["keys"]
+keys_yaml_location = configFile["keys"]
 
 # Load the credentials to get access to the API
-premium_search_args = load_credentials(filename=keys_location_yaml,
+premium_search_args = load_credentials(filename=keys_yaml_location,
                                        yaml_key="search_tweets_api_30day",
                                        env_overwrite=False)
 print(premium_search_args)
 
 
 # Set tweet extraction period and create a list of days of interest
-fromDate = "2020-04-01"
-toDate = "2020-04-03"
+fromDate = "2020-08-20"
+toDate = "2020-08-22"
 
 daysList = [fromDate]
 
@@ -94,6 +93,6 @@ for day in daysList:
                 if cntr % 100 == 0:
                     n_str, cr_date = str(cntr), tweet['created_at']
                     print(f'\n {n_str}: {cr_date}')
-                    json.dump(tweet, f)
-                    f.write('\n')
+                json.dump(tweet, f)
+                f.write('\n')
         print(f'Created file {f}:')

@@ -43,7 +43,7 @@ with open(json_loc) as json_file:
 # Project folder location and keys
 os.chdir(configFile["project_directory"])
 
-import twitterCustomFunc as twf
+import twitter_custom_functions as twf
 import plotWorldMap as pmap
 
 # Import the data from the created .jsonl files

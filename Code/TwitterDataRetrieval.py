@@ -4,7 +4,7 @@
 -- File:    TwitterDataRetrieval.py
 -- Purpose: Script used to retrieve the tweets through TwitterAPI.
 -- Author:  Georgios Spyrou
--- Date:    01/03/2020
+-- Last Updated:    09/09/2020
 -------------------------------------------------------------------
 """
 
@@ -25,7 +25,7 @@ from searchtweets import ResultStream
 
 # Secure location of the required keys to connect to the API
 # This config also contains the search query
-json_loc = r'D:\GitHub\Projects\Twitter_Project\Twitter\twitter_config.json'
+json_loc = r'D:\GitHub\Projects\Twitter_Project\Twitter_Topic_Modelling\twitter_config.json'
 
 with open(json_loc) as json_file:
     configFile = json.load(json_file)
@@ -36,13 +36,13 @@ os.chdir(configFile["project_directory"])
 # Import the custom functions that we will use to retrieve and analyse
 # the data, and use the API to save the data to a .jsonl file.
 
-import twitterCustomFunc as twf
+import Code.twitterCustomFunc as twf
 
-twitter_keys_loc = configFile["keys"]
+keys_location_yaml = configFile["keys"]
 
 # Load the credentials to get access to the API
-premium_search_args = load_credentials(twitter_keys_loc,
-                                       yaml_key="search_tweets_api",
+premium_search_args = load_credentials(filename=keys_location_yaml,
+                                       yaml_key="search_tweets_api_30day",
                                        env_overwrite=False)
 print(premium_search_args)
 

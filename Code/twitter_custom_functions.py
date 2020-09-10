@@ -4,7 +4,7 @@
 -- File:    twitterCustomFunc.py
 -- Purpose: Custom functions used for the project.
 -- Author:  Georgios Spyrou
--- Date:    15/02/2020 10:33:47
+-- Last Updated:  15/02/2020 10:33:47
 -------------------------------------------------------------------
 """
 
@@ -28,7 +28,7 @@ from geopy.exc import GeocoderTimedOut
 
 
 def loadJsonlData(file: str) -> list:
-    '''
+    """
     Reads the data as saved in a .jsonl file
     
     Args:
@@ -39,7 +39,7 @@ def loadJsonlData(file: str) -> list:
     Returns:
     -------
     tweets: A list of all the data saved in the .jsonl file.
-    '''
+    """
     
     tweets = []
     with open(file, 'rb') as f:
@@ -53,7 +53,7 @@ def loadJsonlData(file: str) -> list:
 
 
 def removeURL(text: str) -> str:
-    '''
+    """
     Removes URLs (strings that start with 'http\\ or htpps\\) from text
     
     Args:
@@ -63,7 +63,7 @@ def removeURL(text: str) -> str:
     Returns:
     -------
     text: The input string clean from any URL.
-    '''
+    """
 
     regex = r'http[0-9a-zA-Z\\/.:]+.'
     urllinks = re.findall(regex, text)
@@ -82,7 +82,7 @@ def removeURL(text: str) -> str:
     
 
 def rmPunctAndStopwords(text: str, stopwordlist: list, num_list: list) -> str:
-    '''
+    """
     Given text, remove stopwords and punctuation from the string and convert
     all characters to lowercase.
     
@@ -99,7 +99,7 @@ def rmPunctAndStopwords(text: str, stopwordlist: list, num_list: list) -> str:
     -------
     text: str
         The input string as lowercase, clean from stopwords/punctuation/numbers
-    '''
+    """
 
     tknzr = TweetTokenizer()
     try:
@@ -114,7 +114,7 @@ def rmPunctAndStopwords(text: str, stopwordlist: list, num_list: list) -> str:
 
 
 def plotMostCommonWords(counterDataFrame: pd.core.frame.DataFrame) ->list:
-    '''
+    """
     Plot the most common words that appear in a corpus.
     
     Args:df
@@ -126,7 +126,7 @@ def plotMostCommonWords(counterDataFrame: pd.core.frame.DataFrame) ->list:
     -------
     A plot of the most common words.
         
-    '''
+    """
     fig, ax = plt.subplots(figsize=(10, 10))
 
     counterDataFrame.sort_values(by='count').plot.barh(x='words',
@@ -139,7 +139,7 @@ def plotMostCommonWords(counterDataFrame: pd.core.frame.DataFrame) ->list:
     plt.show()
 
 def createDateTimeFrame(day: str, hourSep: int) -> list:
-    '''
+    """
     Given a specific day of the year, split the day into n amount of timeframes
     
     Args:
@@ -153,7 +153,7 @@ def createDateTimeFrame(day: str, hourSep: int) -> list:
     
     #TODO: make hourDivisionsList a parameter
     
-    '''
+    """
     hourDivisionsList = ['00:45', '03:45', '06:45','09:45', '12:45',
                          '15:45', '18:45', '21:45']
     timeFrameList = []
@@ -168,7 +168,7 @@ def createDateTimeFrame(day: str, hourSep: int) -> list:
     return timeFrameList
 
 def liu_hu_opinion_lexicon(sentence: str) -> str:
-    '''
+    """
     Modified version of the Liu Hu opinion lexicon algorithm for sentiment
     analysis on sentences.
     Reference: https://www.nltk.org/_modules/nltk/sentiment/util.html#demo_liu_hu_lexicon
@@ -178,7 +178,7 @@ def liu_hu_opinion_lexicon(sentence: str) -> str:
     Returns:
     --------
     Sentiment of a sentence, classified as 'Positive', 'Negative' or 'Neutral'
-    '''
+    """
     
     from nltk.corpus import opinion_lexicon
     from nltk.tokenize import treebank
@@ -206,10 +206,10 @@ def liu_hu_opinion_lexicon(sentence: str) -> str:
         return('Neutral')
     
 def translateTweet(text: str) -> str:
-    '''
+    """
     If Tweets are written in any other language than English, translate to
     English and return the translated string.
-    '''
+    """
     translator = Translator(service_urls=['translate.google.com'])
     try:
         textTranslated = translator.translate(text, dest='en').text
@@ -220,11 +220,11 @@ def translateTweet(text: str) -> str:
 
 
 def getValidCoordinates(location: str, geolocator: Nominatim) -> list:
-    '''
+    """
     Given a string which is pointing to specific location (e.g. 'London'),
     return the Latitude and Longitude coordinates of each entry. 
     If an entry does not correspond to a place (e.g. 'abcdef') then we return None.
-    '''
+    """
     
     try:
         if location is not None:

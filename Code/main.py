@@ -4,7 +4,7 @@
 -- File:    tweetMainAnalysis.py
 -- Purpose: Main script which contains the analysis regarding the tweets.
 -- Author:  Georgios Spyrou
--- Date:    15/02/2020
+-- Last Updated:    10/09/2020
 -------------------------------------------------------------------
 """
 
@@ -35,7 +35,7 @@ from plotly.offline import plot
 
 # Secure location of the required keys to connect to the API
 # This config also contains the search query (in this case 'coronavirus')
-json_loc = r'D:\GitHub\Projects\Twitter_Project\Twitter\twitter_config.json'
+json_loc = r'D:\GitHub\Projects\Twitter_Project\Twitter_Topic_Modelling\twitter_config.json'
 
 with open(json_loc) as json_file:
     configFile = json.load(json_file)
@@ -43,8 +43,8 @@ with open(json_loc) as json_file:
 # Project folder location and keys
 os.chdir(configFile["project_directory"])
 
-import twitter_custom_functions as twf
-import plotWorldMap as pmap
+import Code.twitter_custom_functions as tcf
+import Code.plotWorldMap as pmap
 
 # Import the data from the created .jsonl files
 
@@ -59,7 +59,7 @@ allTweetsList = []
 
 for file in os.listdir(jsonl_files_folder):
     if 'twitter' in file:
-        tweets_full_list = twf.loadJsonlData(os.path.join(jsonl_files_folder,
+        tweets_full_list = tcf.loadJsonlData(os.path.join(jsonl_files_folder,
                                                           file))
         allTweetsList += tweets_full_list
 
@@ -76,7 +76,7 @@ geo_loc_ls = []
 for tweet_dict in allTweetsList:
     user_ls.append(tweet_dict['user']['screen_name'])
     userid_ls.append(tweet_dict['user']['id'])
-    tweet_ls.append(twf.removeURL(tweet_dict['text']))
+    tweet_ls.append(tcf.removeURL(tweet_dict['text']))
     replyto_ls.append(tweet_dict['in_reply_to_user_id'])
     location_ls.append(tweet_dict['user']['location'])
     datetime_ls.append(tweet_dict['created_at'])
@@ -96,7 +96,7 @@ df.drop(columns=['index'], inplace = True)
 
 
 # Detect language and translate if necessary
-df['Tweet'] = df['Tweet'].apply(lambda text: twf.translateTweet(text))
+df['Tweet'] = df['Tweet'].apply(lambda text: tcf.translateTweet(text))
 
 ''' USE THE BELOW IF WE WANT TO AVOID RE-TRANSLATING
 df = pd.read_csv('tweetsdata20200314.csv', sep='\t',
@@ -122,7 +122,7 @@ for batch in range(0, df.shape[0], step):
         batchstep = batch + (df.shape[0]%step)
     print(f'\nCalculating batch: {batch}-{batchstep}\n')
     df['Point'] = df['Location'][batch:batchstep].apply(lambda 
-                                   loc: twf.getValidCoordinates(loc, geolocator))
+                                   loc: tcf.getValidCoordinates(loc, geolocator))
 
 dfWithCoords = df[df['Point'].notnull()]
 dfWithCoords['Latitude'] = dfWithCoords['Point'].apply(lambda x: x[0])
@@ -144,7 +144,7 @@ commonTweeterStopwords = ['rt', 'retweet', 'new', 'via', 'us', 'u', '2019',
 allStopWords.extend(commonTweeterStopwords + spanish_stopwords)
 num_list = '0123456789'
 
-df['Tweet'] = df['Tweet'].apply(lambda x: twf.rmPunctAndStopwords(x, allStopWords, num_list))
+df['Tweet'] = df['Tweet'].apply(lambda x: tcf.rmPunctAndStopwords(x, allStopWords, num_list))
 
 # Find the most common words across all tweets
 
@@ -159,7 +159,7 @@ mostCommontweets.head()
 # Some visualizations
 
 # 1. Visualize the most common words across all tweets
-twf.plotMostCommonWords(mostCommontweets)
+tcf.plotMostCommonWords(mostCommontweets)
 
 
 # 2. WordCloud vizualisation
@@ -213,7 +213,7 @@ plt.show()
 sentimentDF = df.copy()
 
 sentimentDF['Sentiment'] = sentimentDF['Tweet'].apply(lambda tweet:
-                                                      twf.liu_hu_opinion_lexicon(tweet))
+                                                      tcf.liu_hu_opinion_lexicon(tweet))
 
 # Vizualise the results
 plt.figure(figsize=(10, 10))

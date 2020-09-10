@@ -5,7 +5,7 @@
 -- Purpose: Functions regarding the plotting of tweets as a world map with
             plotly.
 -- Author:  Georgios Spyrou
--- Date:    08/03/2020 15:35:28
+-- Last Updated:  08/03/2020 15:35:28
 -------------------------------------------------------------------
 """
 
@@ -14,11 +14,11 @@ from plotly import graph_objs as go
 
 
 def createTweetWorldMap(df: pd.core.frame.DataFrame):
-    '''
+    """
     Given dataframe that contains columns corresponding to Longitude and Latitude,
     create a world map plot and mark the Tweet locations on the map.
     
-    '''
+    """
     df['Text'] = df['Date'] + ': \n' + df['Tweet']
     
     fig = go.Figure(data=go.Scattergeo(lon = df['Longitude'],

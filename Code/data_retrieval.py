@@ -35,7 +35,7 @@ os.chdir(configFile["project_directory"])
 # Import the custom functions that we will use to retrieve and analyse
 # the data, and use the API to save the data to a .jsonl file.
 
-import Code.twitter_custom_functions as twf
+import Code.twitter_custom_functions as tcf
 
 keys_yaml_location = configFile["keys"]
 
@@ -63,7 +63,7 @@ while fromDate != toDate:
 # Retrieve the data for each day from the API
 for day in daysList:
     
-    dayNhourList = twf.createDateTimeFrame(day, hourSep=2)
+    dayNhourList = tcf.createDateTimeFrame(day, hourSep=2)
     
     for hs in dayNhourList:
         fromDate = hs[0]

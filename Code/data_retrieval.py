@@ -12,6 +12,7 @@
 
 # Import dependencies
 import os
+import argparse
 import json
 from datetime  import datetime, timedelta
 
@@ -35,7 +36,7 @@ os.chdir(configFile["project_directory"])
 # Import the custom functions that we will use to retrieve and analyse
 # the data, and use the API to save the data to a .jsonl file.
 
-import Code.twitter_custom_functions as tcf
+import twitter_custom_functions as tcf
 
 keys_yaml_location = configFile["keys"]
 
@@ -45,20 +46,29 @@ premium_search_args = load_credentials(filename=keys_yaml_location,
                                        env_overwrite=False)
 print(premium_search_args)
 
-
 # Set tweet extraction period and create a list of days of interest
-fromDate = "2020-08-12"
-toDate = "2020-08-15"
 
-daysList = [fromDate]
+parser=argparse.ArgumentParser()
+parser.add_argument('fromDate', type=str)
+parser.add_argument('toDate', type=str)
+args = parser.parse_args()
 
-while fromDate != toDate:
-    date = datetime.strptime(fromDate, "%Y-%m-%d")
+if args.toDate <= args.fromDate:
+    print('The date range given is invalid. Please give correct from/to dates')
+    exit()
+
+daysList = [args.fromDate]
+
+print(f'Collecting Tweets from: {args.fromDate} to {args.toDate}')
+
+while args.fromDate != args.toDate:
+    date = datetime.strptime(args.fromDate, "%Y-%m-%d")
     mod_date = date + timedelta(days=1)
     incrementedDay = datetime.strftime(mod_date, "%Y-%m-%d")
     daysList.append(incrementedDay)
     
-    fromDate = incrementedDay
+    args.fromDate = incrementedDay
+    
 
 # Retrieve the data for each day from the API
 for day in daysList:

@@ -12,8 +12,6 @@ import os
 import json
 import pickle
 
-import twitter_custom_functions as tcf
-
 # Secure location of the required keys to connect to the API
 # This config also contains the search query (in this case 'coronavirus')
 json_loc = r'D:\GitHub\Projects\Twitter_Project\Twitter_Topic_Modelling\twitter_config.json'
@@ -23,6 +21,8 @@ with open(json_loc) as json_file:
 
 # Project folder location and keys
 os.chdir(configFile["project_directory"])
+
+import Code.twitter_custom_functions as tcf
 
 # Read the data from the jsonl files
 jsonl_files_folder = os.path.join(configFile["project_directory"],
@@ -46,6 +46,5 @@ print('Merging completed...')
 # Pickle the list to a common .txt file
 with open('all_tweets_list.txt', 'wb') as file:
     pickle.dump(allTweetsList, file)
-
 
 print(f'The text file has saved {int(len(allTweetsList))} tweets')

@@ -34,8 +34,9 @@ from geopy.extra.rate_limiter import RateLimiter
 
 import Code.twitter_custom_functions as tcf
 
-    
-with open ('all_tweets_list.txt', 'rb') as file:
+all_tweets_list_file_loc = r'D:\GitHub\Projects\Twitter_Project\Twitter_Topic_Modelling\all_tweets_list.txt'
+
+with open (all_tweets_list_file_loc, 'rb') as file:
     allTweetsList = pickle.load(file)
 
 # Main exploratory data analysis on the data received from the API.

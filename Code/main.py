@@ -9,60 +9,34 @@
 """
 
 # Import dependenciescle
-import os
-import json
 import pandas as pd
+import pickle
 
 from collections import Counter
 
 # Plots and graphs
 import matplotlib.pyplot as plt
-from wordcloud import WordCloud
+import Code.plotWorldMap as pmap
 import seaborn as sns
 
+from wordcloud import WordCloud
+from plotly.offline import plot
+
+
 # NLTK module for text preprocessing and analysis
-from nltk import word_tokenize
 from nltk.collocations import BigramCollocationFinder, BigramAssocMeasures
-
 from nltk.corpus import stopwords
+from nltk import word_tokenize
 
+# Location API
 from geopy.geocoders import Nominatim
 from geopy.extra.rate_limiter import RateLimiter
 
-from plotly.offline import plot
-
-# Set up the project environment
-
-# Secure location of the required keys to connect to the API
-# This config also contains the search query (in this case 'coronavirus')
-json_loc = r'D:\GitHub\Projects\Twitter_Project\Twitter_Topic_Modelling\twitter_config.json'
-
-with open(json_loc) as json_file:
-    configFile = json.load(json_file)
-
-# Project folder location and keys
-os.chdir(configFile["project_directory"])
-
 import Code.twitter_custom_functions as tcf
-import Code.plotWorldMap as pmap
 
-# Import the data from the created .jsonl files
-
-# Read the data from the jsonl files
-jsonl_files_folder = os.path.join(configFile["project_directory"],
-                                  configFile["outputFiles"])
-
-# List that will contain all the Tweets that we managed to receive
-# via the use of the API
-
-allTweetsList = []
-
-for file in os.listdir(jsonl_files_folder):
-    if 'twitter' in file:
-        tweets_full_list = tcf.loadJsonlData(os.path.join(jsonl_files_folder,
-                                                          file))
-        allTweetsList += tweets_full_list
-
+    
+with open ('all_tweets_list.txt', 'rb') as file:
+    allTweetsList = pickle.load(file)
 
 # Main exploratory data analysis on the data received from the API.
 

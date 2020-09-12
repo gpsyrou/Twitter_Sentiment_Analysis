@@ -12,7 +12,6 @@
 import pandas as pd
 import pickle
 import json
-import math
 import os
 
 from collections import Counter
@@ -87,8 +86,9 @@ translated_filename = 'tweets_translated_{0}.csv'.format(datetime.today().strfti
 tweets_df.to_csv(translated_filename, sep='\t', encoding='utf-8', index=False)
 
 
-
-tweets_df = pd.read_csv(translated_filename, sep='\t', encoding = 'utf-8', index_col=None)
+# Import the latest version of the csv that holds the translated data
+tweets_df = pd.read_csv(translated_filename, sep='\t', encoding = 'utf-8',
+                        index_col=None)
 
 # Add Year and Month columns corresponding to each tweet
 tweets_df['Year'] = pd.DatetimeIndex(tweets_df['Date']).year
@@ -131,7 +131,8 @@ spanish_stopwords = list(stopwords.words('spanish'))
 
 # Remove common words used in tweets plus the term that we used for the query
 commonTweeterStopwords = ['rt', 'RT', 'retweet', 'new', 'via', 'us', 'u',
-                          '2019', 'coronavírus','coronavirus','#coronavirus' ]
+                          'covid' '2019', 'coronavírus','coronavirus',
+                          '#coronavirus', '19' ]
 
 allStopWords.extend(commonTweeterStopwords + spanish_stopwords)
 num_list = '0123456789'

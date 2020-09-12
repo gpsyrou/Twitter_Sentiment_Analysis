@@ -243,8 +243,8 @@ def getValidCoordinates(location: str, geolocator: Nominatim) -> list:
         return getValidCoordinates(location, geolocator)
 
 
-def most_common_words(input_df: pd.core.frame.DataFrame, col: str,
-                      n_most_common=20)-> pd.core.frame.DataFrame:
+def most_common_words(input_df: pd.core.frame.DataFrame, col: str, year=None,
+                      month=None, n_most_common=20)-> pd.core.frame.DataFrame:
     """
     Calculate the most common words of a categorical column, usually in a
     format of text.
@@ -253,12 +253,17 @@ def most_common_words(input_df: pd.core.frame.DataFrame, col: str,
     ------
         input_df: Dataframe that contains the relevant text column
         col: Name of the column
+        year: If not None, then indicate year of tweet was made
+        month: If not None, then indicate month of tweet was made
         n_most_common: Number of most common words to calculate
     Returns:
     --------
         Pandas dataframe with two columns indicating a word and number of times
         (count) that it appears in the original input_df
     """
+    if year != None and month != None:
+        input_df = input_df[(input_df['Year']==year) & (input_df['Month']==month)]
+    
     word_list = list([x.split() for x in input_df[col] if x is not None])
     word_counter = Counter(x for xs in word_list for x in set(xs))
     word_counter.most_common(n_most_common)

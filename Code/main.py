@@ -12,6 +12,7 @@
 import pandas as pd
 import pickle
 import json
+import math
 import os
 
 from collections import Counter
@@ -86,12 +87,12 @@ translated_filename = 'tweets_translated_{0}.csv'.format(datetime.today().strfti
 tweets_df.to_csv(translated_filename, sep='\t', encoding='utf-8', index=False)
 
 
-''' Use the below to avoid re-translating
-tweets_df.to_csv('full_tweets_20200912.csv', sep='\t', encoding='utf-8', index=False)
 
 tweets_df = pd.read_csv(translated_filename, sep='\t', encoding = 'utf-8', index_col=None)
-'''
 
+# Add Year and Month columns corresponding to each tweet
+tweets_df['Year'] = pd.DatetimeIndex(tweets_df['Date']).year
+tweets_df['Month'] = pd.DatetimeIndex(tweets_df['Date']).month
 
 
 # Unfortunately TwitterAPI doesn't give much information regarding coordinates.
@@ -129,17 +130,19 @@ allStopWords = list(stopwords.words('english'))
 spanish_stopwords = list(stopwords.words('spanish'))
 
 # Remove common words used in tweets plus the term that we used for the query
-commonTweeterStopwords = ['rt', 'retweet', 'new', 'via', 'us', 'u', '2019',
-                          'coronavírus','coronavirus','#coronavirus' ]
+commonTweeterStopwords = ['rt', 'RT', 'retweet', 'new', 'via', 'us', 'u',
+                          '2019', 'coronavírus','coronavirus','#coronavirus' ]
 
 allStopWords.extend(commonTweeterStopwords + spanish_stopwords)
 num_list = '0123456789'
 
-tweets_df['Tweet'] = tweets_df['Tweet'].apply(
+tweets_df['Tweets_Clean'] = tweets_df['Tweet_Translated'].apply(
         lambda x: tcf.rmPunctAndStopwords(x, allStopWords, num_list))
 
 # Find the most common words across all tweets
-tweet_list = list([x.split() for x in tweets_df['Tweet'] if x is not None])
+tweets_df = tweets_df[tweets_df['Tweets_Clean'].notnull()].reset_index()
+
+tweet_list = list([x.split() for x in tweets_df['Tweets_Clean'] if x is not None])
 all_words_counter = Counter(x for xs in tweet_list for x in set(xs))
 all_words_counter.most_common(20)
 
@@ -156,7 +159,7 @@ tcf.plotMostCommonWords(mostCommontweets)
 # 2. WordCloud vizualisation
 
 plt.figure(figsize=(10, 10))
-gen_text = ' '.join([x for x in tweets_df['Tweet'] if x is not None])
+gen_text = ' '.join([x for x in tweets_df['Tweets_Clean'] if x is not None])
 wordcloud = WordCloud().generate(gen_text)
 
 plt.imshow(wordcloud, interpolation='bilinear')
@@ -166,7 +169,7 @@ plt.show()
 # 3. Find bigrams (pairs of words that frequently appear next to each other)
 
 # First convert the list of tweets into one consecutive string
-allTweetsString = ' '.join([x for x in tweets_df['Tweet']])
+allTweetsString = ' '.join([x for x in tweets_df['Tweets_Clean']])
 
 bigram_measures = BigramAssocMeasures()
 

@@ -15,10 +15,10 @@ import json
 import os
 
 from collections import Counter
+from datetime import datetime
 
 # Plots and graphs
 import matplotlib.pyplot as plt
-import Code.plotWorldMap as pmap
 import seaborn as sns
 
 from wordcloud import WordCloud
@@ -42,6 +42,8 @@ with open(json_loc) as json_file:
 os.chdir(configFile["project_directory"])
 
 import Code.twitter_custom_functions as tcf
+import Code.plotWorldMap as pmap
+
 
 all_tweets_list_file_loc = r'all_tweets_list.txt'
 
@@ -78,15 +80,19 @@ tweets_df.drop(columns=['index'], inplace=True)
 
 
 # Detect language and translate if necessary
-tweets_df['Tweet'] = tweets_df['Tweet'].apply(lambda text: tcf.translateTweet(text))
+tweets_df['Tweet_Translated'] = tweets_df['Tweet'].apply(lambda text: tcf.translateTweet(text))
 
-''' 
+translated_filename = 'tweets_translated_{0}.csv'.format(datetime.today().strftime('%Y-%m-%d'))
+tweets_df.to_csv(translated_filename, sep='\t', encoding='utf-8', index=False)
+
+
+''' Use the below to avoid re-translating
 tweets_df.to_csv('full_tweets_20200912.csv', sep='\t', encoding='utf-8', index=False)
 
-USE THE BELOW IF WE WANT TO AVOID RE-TRANSLATING
-tweets_df = pd.read_csv('full_tweets_20200912.csv', sep='\t',
-                 encoding = 'utf-8', index_col=0)
+tweets_df = pd.read_csv(translated_filename, sep='\t', encoding = 'utf-8', index_col=None)
 '''
+
+
 
 # Unfortunately TwitterAPI doesn't give much information regarding coordinates.
 # But we can try to find the geolocation (long/lat) through the use of geopy
@@ -106,8 +112,8 @@ for batch in range(0, tweets_df.shape[0], step):
     if batchstep > tweets_df.shape[0]:
         batchstep = batch + (tweets_df.shape[0]%step)
     print(f'\nCalculating batch: {batch}-{batchstep}\n')
-    tweets_df['Point'] = tweets_df['Location'][batch:batchstep].apply(lambda 
-                                   loc: tcf.getValidCoordinates(loc, geolocator))
+    tweets_df['Point'] = tweets_df['Location'][batch:batchstep].apply(lambda x:
+        tcf.getValidCoordinates(x, geolocator))
 
 dfWithCoords = tweets_df[tweets_df['Point'].notnull()]
 dfWithCoords['Latitude'] = dfWithCoords['Point'].apply(lambda x: x[0])
@@ -129,10 +135,10 @@ commonTweeterStopwords = ['rt', 'retweet', 'new', 'via', 'us', 'u', '2019',
 allStopWords.extend(commonTweeterStopwords + spanish_stopwords)
 num_list = '0123456789'
 
-tweets_df['Tweet'] = tweets_df['Tweet'].apply(lambda x: tcf.rmPunctAndStopwords(x, allStopWords, num_list))
+tweets_df['Tweet'] = tweets_df['Tweet'].apply(
+        lambda x: tcf.rmPunctAndStopwords(x, allStopWords, num_list))
 
 # Find the most common words across all tweets
-
 tweet_list = list([x.split() for x in tweets_df['Tweet'] if x is not None])
 all_words_counter = Counter(x for xs in tweet_list for x in set(xs))
 all_words_counter.most_common(20)

@@ -143,12 +143,8 @@ tweets_df['Tweets_Clean'] = tweets_df['Tweet_Translated'].apply(
 # Find the most common words across all tweets
 tweets_df = tweets_df[tweets_df['Tweets_Clean'].notnull()].reset_index()
 
-tweet_list = list([x.split() for x in tweets_df['Tweets_Clean'] if x is not None])
-all_words_counter = Counter(x for xs in tweet_list for x in set(xs))
-all_words_counter.most_common(20)
-
-mostCommontweets = pd.DataFrame(all_words_counter.most_common(30),
-                                columns=['words', 'count'])
+mostCommontweets = tcf.most_common_words(input_df=tweets_df, col='Tweets_Clean',
+                                     n_most_common=20)
 mostCommontweets.head()
 
 # Some visualizations

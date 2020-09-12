@@ -12,6 +12,7 @@
 import re
 import string
 import pandas as pd
+from collections import Counter
 from datetime import datetime, timedelta
 
 import json
@@ -240,3 +241,28 @@ def getValidCoordinates(location: str, geolocator: Nominatim) -> list:
             pass
     except GeocoderTimedOut:
         return getValidCoordinates(location, geolocator)
+
+
+def most_common_words(input_df: pd.core.frame.DataFrame, col: str,
+                      n_most_common=20)-> pd.core.frame.DataFrame:
+    """
+    Calculate the most common words of a categorical column, usually in a
+    format of text.
+
+    Args:
+    ------
+        input_df: Dataframe that contains the relevant text column
+        col: Name of the column
+        n_most_common: Number of most common words to calculate
+    Returns:
+    --------
+        Pandas dataframe with two columns indicating a word and number of times
+        (count) that it appears in the original input_df
+    """
+    word_list = list([x.split() for x in input_df[col] if x is not None])
+    word_counter = Counter(x for xs in word_list for x in set(xs))
+    word_counter.most_common(n_most_common)
+    
+    common_words_df = pd.DataFrame(word_counter.most_common(n_most_common),
+                                columns=['words', 'count'])
+    return common_words_df

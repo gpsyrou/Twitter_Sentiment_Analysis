@@ -2,7 +2,7 @@
 
 
 {
-"search_query" : "coronavirus lang:en",
+"search_query" : "coronavirus OR covid lang:en",
 "project_directory" : "D:\\GitHub\\Projects\\Twitter_Project\\Twitter_Topic_Modelling",
 "outputFiles" : "D:\\GitHub\\Projects\\Twitter_Project\\Twitter_Topic_Modelling\\OutputFiles",
 "keys" : "D:\\GitHub\\Projects\\Twitter_Project\\Twitter\\twitter_keys_30days.yaml"

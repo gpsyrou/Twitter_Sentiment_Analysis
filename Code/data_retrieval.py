@@ -8,9 +8,6 @@
 -------------------------------------------------------------------
 """
 
-# Data retrival from Twitter API
-
-# Import dependencies
 import os
 import argparse
 import json
@@ -21,7 +18,6 @@ from searchtweets import load_credentials
 from searchtweets import gen_rule_payload
 from searchtweets import ResultStream
 
-# Set up the project environment
 
 # Secure location of the required keys to connect to the API
 # This config also contains the search query
@@ -82,12 +78,11 @@ for day in daysList:
         rule = gen_rule_payload(pt_rule=configFile['search_query'],
                                 from_date=fromDate,
                                 to_date=toDate ,
-                                results_per_call = 100)
+                                results_per_call=100)
 
         # Set up the stream
-        rs = ResultStream(rule_payload=rule,
-                            max_results=100,
-                            **premium_search_args)
+        rs = ResultStream(rule_payload=rule, max_results=100,
+                          **premium_search_args)
 
         # Create a .jsonl with the results of the Stream query
         #file_date = datetime.now().strftime('%Y_%m_%d_%H_%M')

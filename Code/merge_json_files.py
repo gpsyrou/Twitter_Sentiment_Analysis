@@ -22,7 +22,7 @@ with open(json_loc) as json_file:
 # Project folder location and keys
 os.chdir(configFile["project_directory"])
 
-import Code.twitter_custom_functions as tcf
+import twitter_custom_functions as tcf
 
 # Read the data from the jsonl files
 jsonl_files_folder = os.path.join(configFile["project_directory"],

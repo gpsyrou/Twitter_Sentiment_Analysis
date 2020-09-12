@@ -1,7 +1,7 @@
 """
 -------------------------------------------------------------------
--- Title:   Analysis of Coronavirus related Tweets using TwitterAPI
--- File:    tweetMainAnalysis.py
+-- Title:   Main Analysis of Coronavirus related Tweets retrieved via the TwitterAPI
+-- File:    main.py
 -- Purpose: Main script which contains the analysis regarding the tweets.
 -- Author:  Georgios Spyrou
 -- Last Updated:    10/09/2020
@@ -22,7 +22,6 @@ import seaborn as sns
 from wordcloud import WordCloud
 from plotly.offline import plot
 
-
 # NLTK module for text preprocessing and analysis
 from nltk.collocations import BigramCollocationFinder, BigramAssocMeasures
 from nltk.corpus import stopwords
@@ -39,11 +38,9 @@ all_tweets_list_file_loc = r'D:\GitHub\Projects\Twitter_Project\Twitter_Topic_Mo
 with open (all_tweets_list_file_loc, 'rb') as file:
     allTweetsList = pickle.load(file)
 
-# Main exploratory data analysis on the data received from the API.
 
 # Create a dataframe based on the relevant data from the full list of received
 # tweets
-
 user_ls, userid_ls, tweet_ls = [], [], []
 location_ls, datetime_ls, replyto_ls = [], [], []
 geo_loc_ls = []

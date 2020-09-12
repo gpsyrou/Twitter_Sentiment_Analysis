@@ -262,7 +262,14 @@ def most_common_words(input_df: pd.core.frame.DataFrame, col: str, year=None,
         (count) that it appears in the original input_df
     """
     if year != None and month != None:
-        input_df = input_df[(input_df['Year']==year) & (input_df['Month']==month)]
+        if year not in list(input_df['Year'].unique()):
+            print('This year does not exist')
+            return
+        elif month not in list(input_df['Month'].unique()):
+            print('This month does not exist')
+            return
+        else:
+            input_df = input_df[(input_df['Year']==year) & (input_df['Month']==month)]
     
     word_list = list([x.split() for x in input_df[col] if x is not None])
     word_counter = Counter(x for xs in word_list for x in set(xs))

@@ -136,7 +136,7 @@ spanish_stopwords = list(stopwords.words('spanish'))
 commonTwitterStopwords = ['rt', 'RT', 'retweet', 'new', 'via', 'us', 'u',
                           'covid','coronavirus', '2019', 'coronavírus',
                           '#coronavirus', '19', '#covid', '#covid19',
-                          '#covid2019']
+                          '#covid2019', '“', '”', '‘']
 
 allStopWords.extend(commonTwitterStopwords + spanish_stopwords)
 num_list = '0123456789'
@@ -166,14 +166,15 @@ mostCommonWords_February.head()
 
 # All dataset
 mostCommonWords_Full= tcf.most_common_words(tweets_df, col='Tweets_Clean',
-                                         year=None, month=None, n_most_common=20)
+                                            year=None, month=None,
+                                            n_most_common=20)
 mostCommonWords_Full.head()
 
 # Some visualizations
 
 # 1. Visualize the most common words across all tweets
-tcf.plotMostCommonWords(mostCommonWords_September, year=2020,
-                        month='September')
+tcf.plotMostCommonWords(mostCommonWords_August, year=2020,
+                        month='August')
 
 
 # 2. WordCloud vizualisation

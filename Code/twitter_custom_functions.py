@@ -139,6 +139,7 @@ def plotMostCommonWords(counterDataFrame: pd.core.frame.DataFrame, year: int,
     
     plt.show()
 
+
 def createDateTimeFrame(day: str, hourSep: int) -> list:
     """
     Given a specific day of the year, split the day into n amount of timeframes
@@ -167,6 +168,7 @@ def createDateTimeFrame(day: str, hourSep: int) -> list:
         timeFrameList.append([datePart, incrementedDate])
     
     return timeFrameList
+
 
 def liu_hu_opinion_lexicon(sentence: str) -> str:
     """
@@ -205,6 +207,7 @@ def liu_hu_opinion_lexicon(sentence: str) -> str:
         return('Negative')
     elif pos_words == neg_words:
         return('Neutral')
+    
     
 def translateTweet(text: str) -> str:
     """

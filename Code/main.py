@@ -8,13 +8,11 @@
 -------------------------------------------------------------------
 """
 
-# Import dependenciescle
 import pandas as pd
 import pickle
 import json
 import os
 
-from collections import Counter
 from datetime import datetime
 
 # Plots and graphs

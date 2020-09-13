@@ -114,7 +114,8 @@ def rmPunctAndStopwords(text: str, stopwordlist: list, num_list: list) -> str:
     return text
 
 
-def plotMostCommonWords(counterDataFrame: pd.core.frame.DataFrame) ->list:
+def plotMostCommonWords(counterDataFrame: pd.core.frame.DataFrame, year: int,
+                        month: str) -> list:
     """
     Plot the most common words that appear in a corpus.
     
@@ -130,12 +131,11 @@ def plotMostCommonWords(counterDataFrame: pd.core.frame.DataFrame) ->list:
     """
     fig, ax = plt.subplots(figsize=(10, 10))
 
-    counterDataFrame.sort_values(by='count').plot.barh(x='words',
-                          y='count',
-                          ax=ax,
-                          color="purple")
-    plt.grid(True, alpha = 0.3)
-    ax.set_title("Common Words Found in Tweets (Without Stop Words)")
+    counterDataFrame.sort_values(by='count').plot.barh(x='words', y='count',
+                          ax=ax, color="purple")
+    plt.grid(True, alpha = 0.3, linestyle='-', color='black')
+    ax.set_title(f'Common Words Found in Tweets - {month} {year}',
+                 fontweight='bold')
     
     plt.show()
 

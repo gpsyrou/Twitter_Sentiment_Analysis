@@ -42,6 +42,7 @@ os.chdir(configFile["project_directory"])
 import Code.twitter_custom_functions as tcf
 import Code.plotWorldMap as pmap
 
+sns.set_style("darkgrid")
 
 all_tweets_list_file_loc = r'all_tweets_list.txt'
 
@@ -80,9 +81,13 @@ tweets_df['Year'] = pd.DatetimeIndex(tweets_df['Date']).year
 tweets_df['Month'] = pd.DatetimeIndex(tweets_df['Date']).month
 
 # Detect language and translate if necessary
-tweets_df['Tweet_Translated'] = tweets_df['Tweet'].apply(lambda text: tcf.translateTweet(text))
 
-translated_filename = 'tweets_translated_{0}.csv'.format(datetime.today().strftime('%Y-%m-%d'))
+tweets_df['Tweet_Translated'] = tweets_df['Tweet'].apply(lambda text:
+                                                    tcf.translateTweet(text))
+
+translated_filename = 'tweets_translated_{0}.csv'.format(
+        datetime.today().strftime('%Y-%m-%d'))
+
 tweets_df.to_csv(translated_filename, sep='\t', encoding='utf-8', index=False)
 
 
@@ -92,7 +97,7 @@ tweets_df = pd.read_csv(translated_filename, sep='\t', encoding = 'utf-8',
 
 
 
-
+'''
 # Unfortunately TwitterAPI doesn't give much information regarding coordinates.
 # But we can try to find the geolocation (long/lat) through the use of geopy
 # Geopy has a limit in the times we can call it per second so we have to find
@@ -121,18 +126,19 @@ dfWithCoords['Longitude'] = dfWithCoords['Point'].apply(lambda x: x[1])
 fig = pmap.createTweetWorldMap(dfWithCoords)
 plot(fig)
 
-
+'''
 
 # Remove punctuation and stop words
 allStopWords = list(stopwords.words('english'))
 spanish_stopwords = list(stopwords.words('spanish'))
 
 # Remove common words used in tweets plus the term that we used for the query
-commonTweeterStopwords = ['rt', 'RT', 'retweet', 'new', 'via', 'us', 'u',
-                          'covid' '2019', 'coronavírus','coronavirus',
-                          '#coronavirus', '19' ]
+commonTwitterStopwords = ['rt', 'RT', 'retweet', 'new', 'via', 'us', 'u',
+                          'covid','coronavirus', '2019', 'coronavírus',
+                          '#coronavirus', '19', '#covid', '#covid19',
+                          '#covid2019']
 
-allStopWords.extend(commonTweeterStopwords + spanish_stopwords)
+allStopWords.extend(commonTwitterStopwords + spanish_stopwords)
 num_list = '0123456789'
 
 tweets_df['Tweets_Clean'] = tweets_df['Tweet_Translated'].apply(
@@ -145,10 +151,29 @@ mostCommonWords_August= tcf.most_common_words(tweets_df, col='Tweets_Clean',
                                          year=2020, month=8, n_most_common=20)
 mostCommonWords_August.head()
 
+mostCommonWords_September = tcf.most_common_words(tweets_df, col='Tweets_Clean',
+                                         year=2020, month=9, n_most_common=20)
+
+mostCommonWords_September.head()
+
+mostCommonWords_January= tcf.most_common_words(tweets_df, col='Tweets_Clean',
+                                         year=2020, month=1, n_most_common=20)
+mostCommonWords_January.head()
+
+mostCommonWords_February= tcf.most_common_words(tweets_df, col='Tweets_Clean',
+                                         year=2020, month=2, n_most_common=20)
+mostCommonWords_February.head()
+
+# All dataset
+mostCommonWords_Full= tcf.most_common_words(tweets_df, col='Tweets_Clean',
+                                         year=None, month=None, n_most_common=20)
+mostCommonWords_Full.head()
+
 # Some visualizations
 
 # 1. Visualize the most common words across all tweets
-tcf.plotMostCommonWords(mostCommonWords_August)
+tcf.plotMostCommonWords(mostCommonWords_September, year=2020,
+                        month='September')
 
 
 # 2. WordCloud vizualisation

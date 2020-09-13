@@ -62,20 +62,22 @@ for tweet_dict in allTweetsList:
     replyto_ls.append(tweet_dict['in_reply_to_user_id'])
     location_ls.append(tweet_dict['user']['location'])
     datetime_ls.append(tweet_dict['created_at'])
-    geo_loc_ls.append(tweet_dict['geo'])
 
 # Dataframe that contains the data for analysis
 # Note: The twitter API functionality is very broad in what data we can analyse
 # This project will focus on tweets and with their respective location/date.
 tweets_df = pd.DataFrame(list(zip(user_ls, userid_ls, tweet_ls,
-                           replyto_ls, location_ls, datetime_ls, geo_loc_ls)),
-                  columns=['Username', 'UserID', 'Tweet',
-                           'Reply_to', 'Location', 'Date', 'Coordinates'])
+                           replyto_ls, location_ls, datetime_ls)),
+                  columns=['Username', 'UserID', 'Tweet', 'Reply_to',
+                           'Location', 'Date'])
 
 # Remove tweets that they did not have any text
 tweets_df = tweets_df[tweets_df['Tweet'].notnull()].reset_index()
 tweets_df.drop(columns=['index'], inplace=True)
 
+# Add Year and Month columns corresponding to each tweet
+tweets_df['Year'] = pd.DatetimeIndex(tweets_df['Date']).year
+tweets_df['Month'] = pd.DatetimeIndex(tweets_df['Date']).month
 
 # Detect language and translate if necessary
 tweets_df['Tweet_Translated'] = tweets_df['Tweet'].apply(lambda text: tcf.translateTweet(text))
@@ -88,9 +90,7 @@ tweets_df.to_csv(translated_filename, sep='\t', encoding='utf-8', index=False)
 tweets_df = pd.read_csv(translated_filename, sep='\t', encoding = 'utf-8',
                         index_col=None)
 
-# Add Year and Month columns corresponding to each tweet
-tweets_df['Year'] = pd.DatetimeIndex(tweets_df['Date']).year
-tweets_df['Month'] = pd.DatetimeIndex(tweets_df['Date']).month
+
 
 
 # Unfortunately TwitterAPI doesn't give much information regarding coordinates.

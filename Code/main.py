@@ -136,7 +136,7 @@ spanish_stopwords = list(stopwords.words('spanish'))
 commonTwitterStopwords = ['rt', 'RT', 'retweet', 'new', 'via', 'us', 'u',
                           'covid','coronavirus', '2019', 'coronavírus',
                           '#coronavirus', '19', '#covid', '#covid19',
-                          '#covid2019', '“', '”', '‘']
+                          '#covid2019', '…', '...', '“', '”', '‘', '’']
 
 allStopWords.extend(commonTwitterStopwords + spanish_stopwords)
 num_list = '0123456789'

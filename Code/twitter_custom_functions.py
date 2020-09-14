@@ -106,8 +106,8 @@ def rmPunctAndStopwords(text: str, stopwordlist: list, num_list: list) -> str:
     try:
         txt_tokenized = tknzr.tokenize(text)
         text = ' '.join([char.lower() for char in txt_tokenized if char.lower() 
-                         not in string.punctuation and char.lower() not in stopwordlist
-                         and char != '…' and char != '...' and char != '’' and char not in num_list])
+                         not in string.punctuation and char.lower() not in
+                         stopwordlist and char not in num_list])
     except TypeError:
        pass
    

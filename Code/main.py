@@ -20,16 +20,11 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 from wordcloud import WordCloud
-from plotly.offline import plot
 
 # NLTK module for text preprocessing and analysis
 from nltk.collocations import BigramCollocationFinder, BigramAssocMeasures
 from nltk.corpus import stopwords
 from nltk import word_tokenize
-
-# Location API
-from geopy.geocoders import Nominatim
-from geopy.extra.rate_limiter import RateLimiter
 
 json_loc = r'D:\GitHub\Projects\Twitter_Project\Twitter_Topic_Modelling\twitter_config.json'
 
@@ -40,7 +35,7 @@ with open(json_loc) as json_file:
 os.chdir(configFile["project_directory"])
 
 import Code.twitter_custom_functions as tcf
-import Code.plotWorldMap as pmap
+import Code.plot_world_map as pmap
 
 sns.set_style("darkgrid")
 
@@ -88,6 +83,8 @@ tweets_df['Tweet_Translated'] = tweets_df['Tweet'].apply(lambda text:
 translated_filename = 'tweets_translated_{0}.csv'.format(
         datetime.today().strftime('%Y-%m-%d'))
 
+translated_filename = 'tweets_translated_2020-09-13.csv'
+
 tweets_df.to_csv(translated_filename, sep='\t', encoding='utf-8', index=False)
 
 
@@ -132,7 +129,8 @@ plot(fig)
 allStopWords = list(stopwords.words('english'))
 spanish_stopwords = list(stopwords.words('spanish'))
 
-# Remove common words used in tweets plus the term that we used for the query
+# Remove common words or punctuation used in tweets plus the term that we
+# used for the query
 commonTwitterStopwords = ['rt', 'RT', 'retweet', 'new', 'via', 'us', 'u',
                           'covid','coronavirus', '2019', 'coronavírus',
                           '#coronavirus', '19', '#covid', '#covid19',
@@ -178,14 +176,8 @@ tcf.plotMostCommonWords(mostCommonWords_August, year=2020,
 
 
 # 2. WordCloud vizualisation
-
-plt.figure(figsize=(10, 10))
-gen_text = ' '.join([x for x in tweets_df['Tweets_Clean'] if x is not None])
-wordcloud = WordCloud().generate(gen_text)
-
-plt.imshow(wordcloud, interpolation='bilinear')
-plt.axis("off")
-plt.show()
+tcf.plot_wordcloud(tweets_df, col='Tweets_Clean', filter_year=None,
+                   filter_month=None, figsize=(10, 8))
 
 # 3. Find bigrams (pairs of words that frequently appear next to each other)
 

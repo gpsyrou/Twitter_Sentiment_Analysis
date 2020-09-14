@@ -69,7 +69,7 @@ while args.fromDate != args.toDate:
 # Retrieve the data for each day from the API
 for day in daysList:
     
-    dayNhourList = tcf.createDateTimeFrame(day, hourSep=2)
+    dayNhourList = tcf.create_date_time_frame(day, hourSep=2)
     
     for hs in dayNhourList:
         fromDate = hs[0]

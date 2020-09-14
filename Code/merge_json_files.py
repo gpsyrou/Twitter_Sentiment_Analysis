@@ -37,7 +37,7 @@ print('Merging the json files...')
 
 for file in os.listdir(jsonl_files_folder):
     if 'twitter' in file:
-        tweets_full_list = tcf.loadJsonlData(os.path.join(jsonl_files_folder,
+        tweets_full_list = tcf.load_jsonl_data(os.path.join(jsonl_files_folder,
                                                           file))
         allTweetsList += tweets_full_list
         

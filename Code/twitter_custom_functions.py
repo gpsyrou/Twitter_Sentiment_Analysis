@@ -29,7 +29,7 @@ from geopy.extra.rate_limiter import RateLimiter
 from geopy.exc import GeocoderTimedOut
 
 
-def loadJsonlData(file: str) -> list:
+def load_jsonl_data(file: str) -> list:
     """
     Reads the data as saved in a .jsonl file
     
@@ -54,7 +54,7 @@ def loadJsonlData(file: str) -> list:
         return tweets
 
 
-def removeURL(text: str) -> str:
+def remove_url(text: str) -> str:
     """
     Removes URLs (strings that start with 'http\\ or htpps\\) from text
     
@@ -83,7 +83,8 @@ def removeURL(text: str) -> str:
         pass
     
 
-def rmPunctAndStopwords(text: str, stopwordlist: list, num_list: list) -> str:
+def remove_punct_and_stopwords(text: str, stopwordlist: list,
+                               num_list: list) -> str:
     """
     Given text, remove stopwords and punctuation from the string and convert
     all characters to lowercase.
@@ -115,7 +116,7 @@ def rmPunctAndStopwords(text: str, stopwordlist: list, num_list: list) -> str:
     return text
 
 
-def plotMostCommonWords(counterDataFrame: pd.core.frame.DataFrame, year: int,
+def plot_most_common_words(counterDataFrame: pd.core.frame.DataFrame, year: int,
                         month: str) -> list:
     """
     Plot the most common words that appear in a corpus.
@@ -141,7 +142,7 @@ def plotMostCommonWords(counterDataFrame: pd.core.frame.DataFrame, year: int,
     plt.show()
 
 
-def createDateTimeFrame(day: str, hourSep: int) -> list:
+def create_date_time_frame(day: str, hourSep: int) -> list:
     """
     Given a specific day of the year, split the day into n amount of timeframes
     
@@ -210,7 +211,7 @@ def liu_hu_opinion_lexicon(sentence: str) -> str:
         return('Neutral')
     
     
-def translateTweet(text: str) -> str:
+def translate_tweet(text: str) -> str:
     """
     If Tweets are written in any other language than English, translate to
     English and return the translated string.
@@ -224,7 +225,7 @@ def translateTweet(text: str) -> str:
     return textTranslated
 
 
-def getValidCoordinates(location: str, geolocator: Nominatim) -> list:
+def get_valid_coordinates(location: str, geolocator: Nominatim) -> list:
     """
     Given a string which is pointing to specific location (e.g. 'London'),
     return the Latitude and Longitude coordinates of each entry. 
@@ -244,7 +245,7 @@ def getValidCoordinates(location: str, geolocator: Nominatim) -> list:
         else:
             pass
     except GeocoderTimedOut:
-        return getValidCoordinates(location, geolocator)
+        return get_valid_coordinates(location, geolocator)
 
 
 def most_common_words(input_df: pd.core.frame.DataFrame, col: str, filter_year=None,

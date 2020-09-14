@@ -54,7 +54,7 @@ geo_loc_ls = []
 for tweet_dict in allTweetsList:
     user_ls.append(tweet_dict['user']['screen_name'])
     userid_ls.append(tweet_dict['user']['id'])
-    tweet_ls.append(tcf.removeURL(tweet_dict['text']))
+    tweet_ls.append(tcf.remove_url(tweet_dict['text']))
     replyto_ls.append(tweet_dict['in_reply_to_user_id'])
     location_ls.append(tweet_dict['user']['location'])
     datetime_ls.append(tweet_dict['created_at'])
@@ -78,7 +78,7 @@ tweets_df['Month'] = pd.DatetimeIndex(tweets_df['Date']).month
 # Detect language and translate if necessary
 
 tweets_df['Tweet_Translated'] = tweets_df['Tweet'].apply(lambda text:
-                                                    tcf.translateTweet(text))
+                                                    tcf.translate_tweet(text))
 
 translated_filename = 'tweets_translated_{0}.csv'.format(
         datetime.today().strftime('%Y-%m-%d'))
@@ -114,7 +114,7 @@ for batch in range(0, tweets_df.shape[0], step):
         batchstep = batch + (tweets_df.shape[0]%step)
     print(f'\nCalculating batch: {batch}-{batchstep}\n')
     tweets_df['Point'] = tweets_df['Location'][batch:batchstep].apply(lambda x:
-        tcf.getValidCoordinates(x, geolocator))
+        tcf.get_valid_coordinates(x, geolocator))
 
 dfWithCoords = tweets_df[tweets_df['Point'].notnull()]
 dfWithCoords['Latitude'] = dfWithCoords['Point'].apply(lambda x: x[0])
@@ -140,7 +140,7 @@ allStopWords.extend(commonTwitterStopwords + spanish_stopwords)
 num_list = '0123456789'
 
 tweets_df['Tweets_Clean'] = tweets_df['Tweet_Translated'].apply(
-        lambda x: tcf.rmPunctAndStopwords(x, allStopWords, num_list))
+        lambda x: tcf.remove_punct_and_stopwords(x, allStopWords, num_list))
 
 # Find the most common words across all tweets
 tweets_df = tweets_df[tweets_df['Tweets_Clean'].notnull()].reset_index()
@@ -175,7 +175,7 @@ mostCommonWords_Full.head()
 # Some visualizations
 
 # 1. Visualize the most common words across all tweets
-tcf.plotMostCommonWords(mostCommonWords_August, year=2020, month='August')
+tcf.plot_most_common_words(mostCommonWords_August, year=2020, month='August')
 
 # 2. WordCloud vizualisation
 tcf.plot_wordcloud(tweets_df, col='Tweets_Clean', filter_year=None,

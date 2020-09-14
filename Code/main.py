@@ -146,34 +146,36 @@ tweets_df['Tweets_Clean'] = tweets_df['Tweet_Translated'].apply(
 tweets_df = tweets_df[tweets_df['Tweets_Clean'].notnull()].reset_index()
 
 mostCommonWords_August= tcf.most_common_words(tweets_df, col='Tweets_Clean',
-                                         year=2020, month=8, n_most_common=20)
+                                         filter_year=2020, filter_month=8,
+                                         n_most_common=20)
 mostCommonWords_August.head()
 
 mostCommonWords_September = tcf.most_common_words(tweets_df, col='Tweets_Clean',
-                                         year=2020, month=9, n_most_common=20)
+                                         filter_year=2020, filter_month=9,
+                                         n_most_common=20)
 
 mostCommonWords_September.head()
 
 mostCommonWords_January= tcf.most_common_words(tweets_df, col='Tweets_Clean',
-                                         year=2020, month=1, n_most_common=20)
+                                         filter_year=2020, filter_month=1,
+                                         n_most_common=20)
 mostCommonWords_January.head()
 
 mostCommonWords_February= tcf.most_common_words(tweets_df, col='Tweets_Clean',
-                                         year=2020, month=2, n_most_common=20)
+                                         filter_year=2020, filter_month=2,
+                                         n_most_common=20)
 mostCommonWords_February.head()
 
 # All dataset
 mostCommonWords_Full= tcf.most_common_words(tweets_df, col='Tweets_Clean',
-                                            year=None, month=None,
+                                            filter_year=None, filter_month=None,
                                             n_most_common=20)
 mostCommonWords_Full.head()
 
 # Some visualizations
 
 # 1. Visualize the most common words across all tweets
-tcf.plotMostCommonWords(mostCommonWords_August, year=2020,
-                        month='August')
-
+tcf.plotMostCommonWords(mostCommonWords_August, year=2020, month='August')
 
 # 2. WordCloud vizualisation
 tcf.plot_wordcloud(tweets_df, col='Tweets_Clean', filter_year=None,

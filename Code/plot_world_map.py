@@ -13,7 +13,7 @@ import pandas as pd
 from plotly import graph_objs as go
 
 
-def createTweetWorldMap(df: pd.core.frame.DataFrame):
+def create_tweet_worldmap(df: pd.core.frame.DataFrame):
     """
     Given dataframe that contains columns corresponding to Longitude and Latitude,
     create a world map plot and mark the Tweet locations on the map.

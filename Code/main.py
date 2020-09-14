@@ -120,7 +120,7 @@ dfWithCoords = tweets_df[tweets_df['Point'].notnull()]
 dfWithCoords['Latitude'] = dfWithCoords['Point'].apply(lambda x: x[0])
 dfWithCoords['Longitude'] = dfWithCoords['Point'].apply(lambda x: x[1])
 
-fig = pmap.createTweetWorldMap(dfWithCoords)
+fig = pmap.create_tweet_worldmap(dfWithCoords)
 plot(fig)
 
 '''

@@ -80,16 +80,18 @@ tweets_df['Month'] = pd.DatetimeIndex(tweets_df['Date']).month
 tweets_df['Tweet_Translated'] = tweets_df['Tweet'].apply(lambda text:
                                                     tcf.translate_tweet(text))
 
-translated_filename = 'tweets_translated_{0}.csv'.format(
+translated_tweets_filename = 'tweets_translated_{0}.csv'.format(
         datetime.today().strftime('%Y-%m-%d'))
 
-translated_filename = 'tweets_translated_2020-09-13.csv'
+tweets_df.to_csv(translated_tweets_filename, sep='\t', encoding='utf-8', index=False)
 
-tweets_df.to_csv(translated_filename, sep='\t', encoding='utf-8', index=False)
+translated_tweets_filename = 'tweets_translated_2020-09-13.csv'
+
+
 
 
 # Import the latest version of the csv that holds the translated data
-tweets_df = pd.read_csv(translated_filename, sep='\t', encoding = 'utf-8',
+tweets_df = pd.read_csv(translated_tweets_filename, sep='\t', encoding = 'utf-8',
                         index_col=None)
 
 

@@ -44,7 +44,8 @@ for file in os.listdir(jsonl_files_folder):
 print('Merging completed...')
 
 # Pickle the list to a common .txt file
-with open('all_tweets_list.txt', 'wb') as file:
+out_filename = 'all_tweets_list.txt'
+with open(out_filename, 'wb') as file:
     pickle.dump(allTweetsList, file)
 
-print(f'The text file has saved {int(len(allTweetsList))} tweets')
+print(f'The text file has saved {int(len(allTweetsList))} tweets in {out_filename}')

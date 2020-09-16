@@ -76,16 +76,14 @@ tweets_df['Year'] = pd.DatetimeIndex(tweets_df['Date']).year
 tweets_df['Month'] = pd.DatetimeIndex(tweets_df['Date']).month
 
 # Detect language and translate if necessary
+translated_tweets_filename = 'tweets_translated.csv'
 
 tweets_df['Tweet_Translated'] = tweets_df['Tweet'].apply(lambda text:
                                                     tcf.translate_tweet(text))
 
-translated_tweets_filename = 'tweets_translated_{0}.csv'.format(
-        datetime.today().strftime('%Y-%m-%d'))
+tweets_df.to_csv(translated_tweets_filename, sep='\t', encoding='utf-8',
+                 index=False)
 
-tweets_df.to_csv(translated_tweets_filename, sep='\t', encoding='utf-8', index=False)
-
-translated_tweets_filename = 'tweets_translated_2020-09-13.csv'
 
 
 # Import the latest version of the csv that holds the translated data
@@ -175,7 +173,8 @@ mostCommonWords_Full.head()
 # Some visualizations
 
 # 1. Visualize the most common words across all tweets
-tcf.plot_most_common_words(mostCommonWords_August, year=2020, month='August')
+tcf.plot_most_common_words(mostCommonWords_September, year=2020,
+                           month='September')
 
 # 2. WordCloud vizualisation
 tcf.plot_wordcloud(tweets_df, col='Tweets_Clean', filter_year=None,

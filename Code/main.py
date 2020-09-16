@@ -88,8 +88,6 @@ tweets_df.to_csv(translated_tweets_filename, sep='\t', encoding='utf-8', index=F
 translated_tweets_filename = 'tweets_translated_2020-09-13.csv'
 
 
-
-
 # Import the latest version of the csv that holds the translated data
 tweets_df = pd.read_csv(translated_tweets_filename, sep='\t', encoding = 'utf-8',
                         index_col=None)

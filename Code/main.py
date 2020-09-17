@@ -153,8 +153,7 @@ tcf.plot_most_common_words(august_most_common_words, year=2020,
                            month='August')
 
 # 2. WordCloud vizualisation
-tcf.plot_wordcloud(tweets_df, col='Tweets_Clean', filter_year=2020,
-                   filter_month=9, figsize=(10, 8))
+tcf.plot_wordcloud(august_df, col='Tweets_Clean', figsize=(10, 8))
 
 # 3. Find bigrams (pairs of words that frequently appear next to each other)
 

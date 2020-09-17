@@ -87,8 +87,8 @@ tweets_df.to_csv(translated_tweets_filename, sep='\t', encoding='utf-8',
 
 
 # Import the latest version of the csv that holds the translated data
-tweets_df = pd.read_csv(translated_tweets_filename, sep='\t', encoding = 'utf-8',
-                        index_col=None)
+tweets_df = pd.read_csv(translated_tweets_filename, sep='\t',
+                        encoding = 'utf-8', index_col=None)
 
 
 
@@ -177,8 +177,8 @@ tcf.plot_most_common_words(mostCommonWords_September, year=2020,
                            month='September')
 
 # 2. WordCloud vizualisation
-tcf.plot_wordcloud(tweets_df, col='Tweets_Clean', filter_year=None,
-                   filter_month=None, figsize=(10, 8))
+tcf.plot_wordcloud(tweets_df, col='Tweets_Clean', filter_year=2020,
+                   filter_month=9, figsize=(10, 8))
 
 # 3. Find bigrams (pairs of words that frequently appear next to each other)
 

@@ -248,8 +248,8 @@ def get_valid_coordinates(location: str, geolocator: Nominatim) -> list:
         return get_valid_coordinates(location, geolocator)
 
 
-def most_common_words(input_df: pd.core.frame.DataFrame, col: str, filter_year=None,
-                      filter_month=None, n_most_common=20) -> pd.core.frame.DataFrame:
+def most_common_words(input_df: pd.core.frame.DataFrame, col: str,
+                      n_most_common=20) -> pd.core.frame.DataFrame:
     """
     Calculate the most common words of a categorical column, usually in a
     format of text.
@@ -266,17 +266,6 @@ def most_common_words(input_df: pd.core.frame.DataFrame, col: str, filter_year=N
         Pandas dataframe with two columns indicating a word and number of times
         (count) that it appears in the original input_df
     """
-    if filter_year != None and filter_month != None:
-        if filter_year not in list(input_df['Year'].unique()):
-            print('This year does not exist')
-            return
-        elif filter_month not in list(input_df['Month'].unique()):
-            print('This month does not exist')
-            return
-        else:
-            input_df = input_df[(input_df['Year']==filter_year) &
-                                (input_df['Month']==filter_month)]
-    
     word_list = list([x.split() for x in input_df[col] if x is not None])
     word_counter = Counter(x for xs in word_list for x in set(xs))
     word_counter.most_common(n_most_common)
@@ -287,23 +276,29 @@ def most_common_words(input_df: pd.core.frame.DataFrame, col: str, filter_year=N
 
 
 def plot_wordcloud(input_df: pd.core.frame.DataFrame, col: str,
-                   filter_year=None, filter_month=None, figsize=(10, 8))-> None:
-
-    if filter_year != None and filter_month != None:
-        if filter_year not in list(input_df['Year'].unique()):
-            print('This year does not exist')
-            return
-        elif filter_month not in list(input_df['Month'].unique()):
-            print('This month does not exist')
-            return
-        else:
-            input_df = input_df[(input_df['Year']==filter_year) &
-                                (input_df['Month']==filter_month)]
-
+                   figsize=(10, 8))-> None:
+    """
+    Generate a WordCloud plot based on the number of occurenences of words
+    in a set of text or documents
+    """
     plt.figure(figsize=figsize)
     gen_text = ' '.join([x for x in input_df[col] if x is not None])
     wordcloud = WordCloud().generate(gen_text)
     plt.imshow(wordcloud, interpolation='bilinear')
     plt.axis("off")
     plt.show()
+
+
+def filter_df(input_df: pd.core.frame.DataFrame, year: int, month: int):
+    """
+    Filter the master dataframe on a subset depending on a combination of year
+    and month of interest.
+    """
+    if year not in list(input_df['Year'].unique()):
+        print('This year does not exist')
+    elif month not in list(input_df['Month'].unique()):
+        print('This month does not exist')
+    else:
+        filtered_df = input_df[(input_df['Year']==year) & (input_df['Month']==month)]
+        return filtered_df
 

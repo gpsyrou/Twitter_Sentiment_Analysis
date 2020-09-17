@@ -143,38 +143,14 @@ tweets_df['Tweets_Clean'] = tweets_df['Tweet_Translated'].apply(
 # Find the most common words across all tweets
 tweets_df = tweets_df[tweets_df['Tweets_Clean'].notnull()].reset_index()
 
-mostCommonWords_August= tcf.most_common_words(tweets_df, col='Tweets_Clean',
-                                         filter_year=2020, filter_month=8,
-                                         n_most_common=20)
-mostCommonWords_August.head()
-
-mostCommonWords_September = tcf.most_common_words(tweets_df, col='Tweets_Clean',
-                                         filter_year=2020, filter_month=9,
-                                         n_most_common=20)
-
-mostCommonWords_September.head()
-
-mostCommonWords_January= tcf.most_common_words(tweets_df, col='Tweets_Clean',
-                                         filter_year=2020, filter_month=1,
-                                         n_most_common=20)
-mostCommonWords_January.head()
-
-mostCommonWords_February= tcf.most_common_words(tweets_df, col='Tweets_Clean',
-                                         filter_year=2020, filter_month=2,
-                                         n_most_common=20)
-mostCommonWords_February.head()
-
-# All dataset
-mostCommonWords_Full= tcf.most_common_words(tweets_df, col='Tweets_Clean',
-                                            filter_year=None, filter_month=None,
-                                            n_most_common=20)
-mostCommonWords_Full.head()
+august_df = tcf.filter_df(tweets_df, year=2020, month=8)
+august_most_common_words = tcf.most_common_words(august_df, col='Tweets_Clean', n_most_common=20)
 
 # Some visualizations
 
 # 1. Visualize the most common words across all tweets
-tcf.plot_most_common_words(mostCommonWords_September, year=2020,
-                           month='September')
+tcf.plot_most_common_words(august_most_common_words, year=2020,
+                           month='August')
 
 # 2. WordCloud vizualisation
 tcf.plot_wordcloud(tweets_df, col='Tweets_Clean', filter_year=2020,

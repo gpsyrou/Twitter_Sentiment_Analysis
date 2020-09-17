@@ -117,26 +117,18 @@ def remove_punct_and_stopwords(text: str, stopwordlist: list,
 
 
 def plot_most_common_words(counterDataFrame: pd.core.frame.DataFrame, year: int,
-                        month: str) -> list:
-    """
-    Plot the most common words that appear in a corpus.
-    
-    Args:df
-    ----
-    counterDataFrame: Dataframe
-            Contains a dataframe of the form ['word','count'] 
-            
-    Returns:
-    -------
-    A plot of the most common words.
-        
-    """
+                        month: int) -> list:
+
+    year_dict = {1:'January', 2:'February', 3:'March', 4:'April', 5:'May',
+                 6:'June', 7:'July', 8:'August', 9:'September', 10:'October',
+                 11:'Novermber', 12:'December'}
+
     fig, ax = plt.subplots(figsize=(10, 10))
 
     counterDataFrame.sort_values(by='count').plot.barh(x='words', y='count',
                           ax=ax, color="purple")
     plt.grid(True, alpha = 0.3, linestyle='-', color='black')
-    ax.set_title(f'Common Words Found in Tweets - {month} {year}',
+    ax.set_title(f'Common Words Found in Tweets - {year_dict[month]} {year}',
                  fontweight='bold')
     
     plt.show()

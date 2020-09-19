@@ -173,10 +173,8 @@ tweets_august.plot_bigrams(top_n=20, figsize=(10, 8))
 # 4. Sentiment analysis on tweets based on Liu Hu opinion lexicon
 # Classify tweets as 'positive', 'negative' or 'neutral' based on the polarity
 # of the words present in a sentence.
-sentimentDF = august_df.copy()
 
-sentimentDF['Sentiment'] = august_df['Tweets_Clean'].apply(lambda tweet:
-                                                      tcf.liu_hu_opinion_lexicon(tweet))
+# August
+tweets_august.calculate_sentiment()
+tweets_august.plot_sentiment(figsize=(10, 8))
 
-# Vizualise the results
-tcf.plot_sentiment(input_df=sentimentDF, sentiment_col='Sentiment')

@@ -132,7 +132,7 @@ class TwitterSentimentDataframe:
         plt.grid(True, alpha=0.2, color='black')
         plt.show()       
     
-    def liu_hu_opinion_lexicon(sentence: str) -> str:
+    def liu_hu_opinion_lexicon(self, sentence: str) -> str:
         """
         Modified version of the Liu Hu opinion lexicon algorithm for sentiment
         analysis on sentences.

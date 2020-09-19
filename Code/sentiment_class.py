@@ -1,10 +1,18 @@
-import pandas as pd
+"""
+-------------------------------------------------------------------
+-- Title:   Analysis of Coronavirus related Tweets using TwitterAPI
+-- File:    sentiment_class.py
+-- Author:  Georgios Spyrou
+-- Last Updated:  19/09/2020
+-------------------------------------------------------------------
+"""
+
 import matplotlib.pyplot as plt
-from wordcloud import WordCloud
-import seaborn as sns
 
 from collections import Counter
-
+from pandas import DataFrame
+from wordcloud import WordCloud
+from seaborn import barplot, countplot
 from nltk.collocations import BigramCollocationFinder
 from nltk import word_tokenize
 
@@ -17,11 +25,12 @@ class TwitterSentiment:
         self.year = None
         self.month = None
         self.tweet_column = tweet_column
-            
+
+          
     def subset_dataframe(self, year:int, month: int):
         """
-        Filter the master dataframe on a subset depending on a combination of year
-        and month of interest.
+        Filter the master dataframe on a subset depending on a combination of
+        year and month of interest.
         """
         self.year = year
         self.month = month
@@ -31,10 +40,11 @@ class TwitterSentiment:
         elif month not in list(self.df['Month'].unique()):
             print('This month does not exist')
         else:
-            self.df = self.df[(self.df['Year']==year) & (self.df['Month']==month)]
+            self.df = self.df[(self.df['Year']==year) &
+                              (self.df['Month']==month)]
 
 
-    def most_common_words(self, tweet_column: str, n_most_common=20) -> pd.core.frame.DataFrame:
+    def most_common_words(self, tweet_column: str, n_most_common=20):
         """
         Calculate the most common words of a categorical column, usually in a
         format of text.
@@ -48,16 +58,14 @@ class TwitterSentiment:
             n_most_common: Number of most common words to calculate
         Returns:
         --------
-            Pandas dataframe with two columns indicating a word and number of times
-            (count) that it appears in the original input_df
+            Pandas dataframe with two columns indicating a word and number 
+            of times (count) that it appears in the original input_df
         """
-        
-
         word_list = list([x.split() for x in self.df[self.tweet_column] if x is not None])
         word_counter = Counter(x for xs in word_list for x in set(xs))
         word_counter.most_common(n_most_common)
         
-        self.common_words_df = pd.DataFrame(word_counter.most_common(n_most_common),
+        self.common_words_df = DataFrame(word_counter.most_common(n_most_common),
                                     columns=['words', 'count'])
         return self.common_words_df
 
@@ -74,6 +82,7 @@ class TwitterSentiment:
         common_words_df.sort_values(by='count').plot.barh(x='words',
                                    y='count', ax=ax, color='purple')
         plt.grid(True, alpha = 0.3, linestyle='-', color='black')
+
         if self.year is not None and self.month is not None:
             ax.set_title(f'Common Words Found in Tweets - {year_dict[self.month]} {self.year}',
                                                            fontweight='bold')
@@ -97,8 +106,8 @@ class TwitterSentiment:
         
     def compute_bigrams(self) -> dict:
         """
-        Calculate the number of occurences that a pair of words appear next to each
-        other, and return a dictionary of pair of words - count.
+        Calculate the number of occurences that a pair of words appear next to
+        each other, and return a dictionary of pair of words - count.
         """
         tweets_to_string = ' '.join([x for x in self.df[self.tweet_column]])
     
@@ -124,13 +133,14 @@ class TwitterSentiment:
         bgstring = list(map(lambda txt: '-'.join(txt), bgram))
         
         plt.figure(figsize=figsize)
-        g = sns.barplot(bgstring, counts, palette='muted')
+        g = barplot(bgstring, counts, palette='muted')
         g.set_xticklabels(g.get_xticklabels(), rotation=80)
         plt.title(f'Plot of the top-{top_n} pairs of words that appear next to each other',
                   fontweight='bold')
         plt.ylabel('Count')
         plt.grid(True, alpha=0.2, color='black')
         plt.show()       
+
     
     def liu_hu_opinion_lexicon(self, sentence: str) -> str:
         """
@@ -138,11 +148,11 @@ class TwitterSentiment:
         analysis on sentences.
         Reference: https://www.nltk.org/_modules/nltk/sentiment/util.html#demo_liu_hu_lexicon
         
-        The function has been modified to return the values instead of printing.
+        The function has been modified to return the values instead of printing
         
         Returns:
         --------
-        Sentiment of a sentence, classified as 'Positive', 'Negative' or 'Neutral'
+        Sentiment of a text, classified as 'Positive','Negative' or 'Neutral'
         """
         
         from nltk.corpus import opinion_lexicon
@@ -178,8 +188,8 @@ class TwitterSentiment:
             
     def plot_sentiment(self, figsize=(10, 8)) -> None:
         plt.figure(figsize=figsize)
-        g = sns.countplot(x='Sentiment', data=self.df,
-                          palette=['#C92528', '#37B41E', '#1B9EC8'])
+        g = countplot(x='Sentiment', data=self.df,
+                      palette=['#C92528', '#37B41E', '#1B9EC8'])
         g.set_xticklabels(g.get_xticklabels(), rotation=0)
         plt.title('Sentiment Classification of Tweets', fontweight='bold')
         plt.ylabel('Count', labelpad=8)

@@ -28,8 +28,7 @@ with open(json_loc) as json_file:
 os.chdir(configFile["project_directory"])
 
 import utilities.twitter_custom_functions as tcf
-import Code.plot_world_map as pmap
-from Code.sentiment_class import TwitterSentimentDataframe
+from Code.sentiment_class import TwitterSentiment
 
 sns.set_style("darkgrid")
 

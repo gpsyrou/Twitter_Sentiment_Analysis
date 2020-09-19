@@ -13,10 +13,8 @@ import pickle
 import json
 import os
 
-# Plots and graphs
 import seaborn as sns
 
-# NLTK module for text preprocessing and analysis
 from nltk.corpus import stopwords
 
 json_loc = r'D:\GitHub\Projects\Twitter_Project\Twitter_Topic_Modelling\twitter_config.json'

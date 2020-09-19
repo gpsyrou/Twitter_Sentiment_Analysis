@@ -3,11 +3,10 @@
 -- Title:   Analysis of Coronavirus related Tweets using TwitterAPI
 -- File:    twitter_custom_functions.py
 -- Author:  Georgios Spyrou
--- Last Updated:  15/02/2020 10:33:47
+-- Last Updated:  19/09/2020
 -------------------------------------------------------------------
 """
 
-# Dependencies used from the functions
 import re
 import string
 from datetime import datetime, timedelta

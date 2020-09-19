@@ -4,6 +4,6 @@
 {
 "search_query" : "coronavirus OR covid lang:en",
 "project_directory" : "D:\\GitHub\\Projects\\Twitter_Project\\Twitter_Topic_Modelling",
-"outputFiles" : "D:\\GitHub\\Projects\\Twitter_Project\\Twitter_Topic_Modelling\\OutputFiles",
+"outputFiles" : "D:\\GitHub\\Projects\\Twitter_Project\\Twitter_Topic_Modelling\\output_files",
 "keys" : "D:\\GitHub\\Projects\\Twitter_Project\\Twitter_Topic_Modelling\\twitter_keys.yaml"
 }

@@ -13,18 +13,11 @@ import pickle
 import json
 import os
 
-from datetime import datetime
-
 # Plots and graphs
-import matplotlib.pyplot as plt
 import seaborn as sns
 
-from wordcloud import WordCloud
-
 # NLTK module for text preprocessing and analysis
-from nltk.collocations import BigramCollocationFinder, BigramAssocMeasures
 from nltk.corpus import stopwords
-from nltk import word_tokenize
 
 json_loc = r'D:\GitHub\Projects\Twitter_Project\Twitter_Topic_Modelling\twitter_config.json'
 
@@ -34,8 +27,9 @@ with open(json_loc) as json_file:
 # Project folder location and keys
 os.chdir(configFile["project_directory"])
 
-import Code.twitter_custom_functions as tcf
+import utilities.twitter_custom_functions as tcf
 import Code.plot_world_map as pmap
+from Code.sentiment_class import TwitterSentimentDataframe
 
 sns.set_style("darkgrid")
 
@@ -140,28 +134,40 @@ num_list = '0123456789'
 tweets_df['Tweets_Clean'] = tweets_df['Tweet_Translated'].apply(
         lambda x: tcf.remove_punct_and_stopwords(x, allStopWords, num_list))
 
-# Find the most common words across all tweets
 tweets_df = tweets_df[tweets_df['Tweets_Clean'].notnull()].reset_index()
 
-august_df = tcf.filter_df(tweets_df, year=2020, month=8)
-august_most_common_words = tcf.most_common_words(august_df, col='Tweets_Clean',
-                                                 n_most_common=20)
-
 # 1. Visualize the most common words across all tweets
-tcf.plot_most_common_words(august_most_common_words, year=2020, month=8)
+
+
+# All
+tweets_all_months = TwitterSentimentDataframe(input_df=tweets_df,
+                                              tweet_column='Tweets_Clean')
+tweets_all_months.plot_most_common_words(figsize=(10, 8))
+
+# August
+tweets_august = TwitterSentimentDataframe(input_df=tweets_df,
+                                              tweet_column='Tweets_Clean')
+tweets_august.subset_dataframe(year=2020, month=8)
+
+tweets_august.plot_most_common_words(figsize=(10, 8))
+
 
 # 2. WordCloud vizualisation
-tcf.plot_wordcloud(august_df, col='Tweets_Clean', figsize=(10, 8))
+
+# All
+tweets_all_months.plot_wordcloud(figsize=(10, 8))
+# August
+tweets_august.plot_wordcloud(figsize=(10, 8))
+
 
 # 3. Find bigrams (pairs of words that frequently appear next to each other)
+# All
+bigrams_all = tweets_all_months.compute_bigrams()
+tweets_all_months.plot_bigrams(top_n=20, figsize=(10, 8))
 
-
-# Choose number of bigrams than we want to investigate
-bigrams_all = tcf.compute_bigrams(input_df=tweets_df, col='Tweets_Clean')
-tcf.plot_bigrams(bigrams_all, top_n=20)
-
-bigrams_august = tcf.compute_bigrams(input_df=august_df, col='Tweets_Clean')
-tcf.plot_bigrams(bigrams_august, top_n=10, figsize=(12,10))
+# August
+bigrams_august = tweets_august.compute_bigrams()
+tweets_august.plot_bigrams(top_n=20, figsize=(10, 8))
 
 
 # 4. Sentiment analysis on tweets based on Liu Hu opinion lexicon

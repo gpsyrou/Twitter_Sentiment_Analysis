@@ -9,7 +9,7 @@ from nltk.collocations import BigramCollocationFinder
 from nltk import word_tokenize
 
 
-class TwitterSentimentDataframe:
+class TwitterSentiment:
  
     
     def __init__(self, input_df, tweet_column):

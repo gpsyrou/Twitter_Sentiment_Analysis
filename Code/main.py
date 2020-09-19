@@ -140,12 +140,12 @@ tweets_df = tweets_df[tweets_df['Tweets_Clean'].notnull()].reset_index()
 
 
 # All
-tweets_all_months = TwitterSentimentDataframe(input_df=tweets_df,
+tweets_all_months = TwitterSentiment(input_df=tweets_df,
                                               tweet_column='Tweets_Clean')
 tweets_all_months.plot_most_common_words(figsize=(10, 8))
 
 # August
-tweets_august = TwitterSentimentDataframe(input_df=tweets_df,
+tweets_august = TwitterSentiment(input_df=tweets_df,
                                               tweet_column='Tweets_Clean')
 tweets_august.subset_dataframe(year=2020, month=8)
 

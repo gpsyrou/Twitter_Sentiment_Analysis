@@ -331,3 +331,13 @@ def plot_bigrams(bigrams_dict: dict, top_n: int, figsize=(10, 8)) -> None:
     plt.grid(True, alpha=0.2, color='black')
     plt.show()
 
+def plot_sentiment(input_df, sentiment_col: str, figsize=(10, 8)) -> None:
+    plt.figure(figsize=figsize)
+    g = sns.countplot(x=sentiment_col, data=input_df,
+                      palette=['#C92528', '#37B41E', '#1B9EC8'])
+    g.set_xticklabels(g.get_xticklabels(), rotation=0)
+    plt.title('Sentiment Classification of Tweets', fontweight='bold')
+    plt.ylabel('Count', labelpad=8)
+    plt.xlabel('Sentiment', labelpad=8)
+    plt.show()
+

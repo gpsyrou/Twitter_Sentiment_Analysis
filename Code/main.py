@@ -147,8 +147,6 @@ august_df = tcf.filter_df(tweets_df, year=2020, month=8)
 august_most_common_words = tcf.most_common_words(august_df, col='Tweets_Clean',
                                                  n_most_common=20)
 
-# Some visualizations
-
 # 1. Visualize the most common words across all tweets
 tcf.plot_most_common_words(august_most_common_words, year=2020, month=8)
 
@@ -157,38 +155,14 @@ tcf.plot_wordcloud(august_df, col='Tweets_Clean', figsize=(10, 8))
 
 # 3. Find bigrams (pairs of words that frequently appear next to each other)
 
-# First convert the list of tweets into one consecutive string
-allTweetsString = ' '.join([x for x in tweets_df['Tweets_Clean']])
-
-bigram_measures = BigramAssocMeasures()
-
-finder = BigramCollocationFinder.from_words(word_tokenize(allTweetsString))
-
-bigramDict = {}
-for k, v in finder.ngram_fd.items():
-    # We have a condition as we need to avoid characters like '@' and '#'
-    if len(k[0]) > 1 and len(k[1]) > 1 and "'s" not in k:
-        bigramDict[k] = v
-    else:
-        continue
 
 # Choose number of bigrams than we want to investigate
-topn = 30  # len(bigramDict) -- > if we want all
+bigrams_all = tcf.compute_bigrams(input_df=tweets_df, col='Tweets_Clean')
+tcf.plot_bigrams(bigrams_all, top_n=20)
 
-# Bigrams as a sorted dictionary
-sortedBiGrams = sorted(bigramDict.items(),
-                       key=lambda x: x[1], reverse=True)[0:topn]
+bigrams_august = tcf.compute_bigrams(input_df=august_df, col='Tweets_Clean')
+tcf.plot_bigrams(bigrams_august, top_n=10, figsize=(12,10))
 
-# Visualise the top 20 BiGrams
-bgram, counts = list(zip(*sortedBiGrams))
-bgstring = list(map(lambda txt: '-'.join(txt), bgram))
-
-plt.figure(figsize=(10, 10))
-g = sns.barplot(bgstring, counts, palette='muted')
-g.set_xticklabels(g.get_xticklabels(), rotation=80)
-plt.title(f'Plot of the top-{topn} pairs of words that appear next to each other')
-plt.ylabel('Count')
-plt.show()
 
 # 4. Sentiment analysis on tweets based on Liu Hu opinion lexicon
 # Classify tweets as 'positive', 'negative' or 'neutral' based on the polarity

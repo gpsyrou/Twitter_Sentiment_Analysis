@@ -1,8 +1,7 @@
 """
 -------------------------------------------------------------------
 -- Title:   Analysis of Coronavirus related Tweets using TwitterAPI
--- File:    twitterCustomFunc.py
--- Purpose: Custom functions used for the project.
+-- File:    twitter_custom_functions.py
 -- Author:  Georgios Spyrou
 -- Last Updated:  15/02/2020 10:33:47
 -------------------------------------------------------------------
@@ -20,6 +19,7 @@ import json_lines
 
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
+import seaborn as sns
 
 from nltk.tokenize import TweetTokenizer
 from googletrans import Translator
@@ -27,6 +27,9 @@ from googletrans import Translator
 from geopy.geocoders import Nominatim
 from geopy.extra.rate_limiter import RateLimiter
 from geopy.exc import GeocoderTimedOut
+
+from nltk.collocations import BigramCollocationFinder, BigramAssocMeasures
+from nltk import word_tokenize
 
 
 def load_jsonl_data(file: str) -> list:
@@ -291,6 +294,40 @@ def filter_df(input_df: pd.core.frame.DataFrame, year: int, month: int):
     elif month not in list(input_df['Month'].unique()):
         print('This month does not exist')
     else:
-        filtered_df = input_df[(input_df['Year']==year) & (input_df['Month']==month)]
+        filtered_df = input_df[(input_df['Year']==year) &
+                               (input_df['Month']==month)]
         return filtered_df
+    
+
+def compute_bigrams(input_df: pd.core.frame.DataFrame, col: str) -> dict: 
+    tweets_to_string = ' '.join([x for x in input_df[col]])
+
+    finder = BigramCollocationFinder.from_words(word_tokenize(tweets_to_string))
+    
+    bigrams_dict = {}
+    for k, v in finder.ngram_fd.items():
+        # Condition to avoid characters like '@' and '#'
+        if len(k[0]) > 1 and len(k[1]) > 1 and "'s" not in k:
+            bigrams_dict[k] = v
+        else:
+            continue
+    return bigrams_dict
+
+
+def plot_bigrams(bigrams_dict: dict, top_n: int, figsize=(10, 8)) -> None:
+
+    sortedBiGrams = sorted(bigrams_dict.items(), key=lambda x: x[1],
+                           reverse=True)[0:top_n]
+
+    bgram, counts = list(zip(*sortedBiGrams))
+    bgstring = list(map(lambda txt: '-'.join(txt), bgram))
+    
+    plt.figure(figsize=figsize)
+    g = sns.barplot(bgstring, counts, palette='muted')
+    g.set_xticklabels(g.get_xticklabels(), rotation=80)
+    plt.title(f'Plot of the top-{top_n} pairs of words that appear next to each other',
+              fontweight='bold')
+    plt.ylabel('Count')
+    plt.grid(True, alpha=0.2, color='black')
+    plt.show()
 

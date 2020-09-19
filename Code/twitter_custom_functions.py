@@ -299,7 +299,11 @@ def filter_df(input_df: pd.core.frame.DataFrame, year: int, month: int):
         return filtered_df
     
 
-def compute_bigrams(input_df: pd.core.frame.DataFrame, col: str) -> dict: 
+def compute_bigrams(input_df: pd.core.frame.DataFrame, col: str) -> dict:
+    """
+    Calculate the number of occurences that a pair of words appear next to each
+    other, and return a dictionary of pair of words - count.
+    """
     tweets_to_string = ' '.join([x for x in input_df[col]])
 
     finder = BigramCollocationFinder.from_words(word_tokenize(tweets_to_string))
@@ -330,6 +334,7 @@ def plot_bigrams(bigrams_dict: dict, top_n: int, figsize=(10, 8)) -> None:
     plt.ylabel('Count')
     plt.grid(True, alpha=0.2, color='black')
     plt.show()
+
 
 def plot_sentiment(input_df, sentiment_col: str, figsize=(10, 8)) -> None:
     plt.figure(figsize=figsize)

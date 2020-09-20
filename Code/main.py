@@ -79,39 +79,6 @@ tweets_df.to_csv(translated_tweets_filename, sep='\t', encoding='utf-8',
 tweets_df = pd.read_csv(translated_tweets_filename, sep='\t',
                         encoding = 'utf-8', index_col=None)
 
-
-
-'''
-# Unfortunately TwitterAPI doesn't give much information regarding coordinates.
-# But we can try to find the geolocation (long/lat) through the use of geopy
-# Geopy has a limit in the times we can call it per second so we have to find
-# a workaround
-
-geolocator = Nominatim(user_agent="https://developer.twitter.com/en/apps/17403833") 
-   
-geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1,
-                      max_retries=3, error_wait_seconds=2)
-
-# Split it in batches and identify the locations
-step = 100
-
-for batch in range(0, tweets_df.shape[0], step):
-    batchstep = batch+step
-    if batchstep > tweets_df.shape[0]:
-        batchstep = batch + (tweets_df.shape[0]%step)
-    print(f'\nCalculating batch: {batch}-{batchstep}\n')
-    tweets_df['Point'] = tweets_df['Location'][batch:batchstep].apply(lambda x:
-        tcf.get_valid_coordinates(x, geolocator))
-
-dfWithCoords = tweets_df[tweets_df['Point'].notnull()]
-dfWithCoords['Latitude'] = dfWithCoords['Point'].apply(lambda x: x[0])
-dfWithCoords['Longitude'] = dfWithCoords['Point'].apply(lambda x: x[1])
-
-fig = pmap.create_tweet_worldmap(dfWithCoords)
-plot(fig)
-
-'''
-
 # Remove punctuation and stop words
 allStopWords = list(stopwords.words('english'))
 spanish_stopwords = list(stopwords.words('spanish'))
@@ -173,3 +140,39 @@ tweets_august.plot_bigrams(top_n=20, figsize=(10, 8))
 tweets_august.calculate_sentiment()
 tweets_august.plot_sentiment(figsize=(10, 8))
 
+
+
+
+
+# Unfortunately TwitterAPI doesn't give much information regarding coordinates.
+# But we can try to find the geolocation (long/lat) through the use of geopy
+# Geopy has a limit in the times we can call it per second so we have to find
+# a workaround
+august_df = tweets_august.df
+
+from geopy.geocoders import Nominatim
+from geopy.extra.rate_limiter import RateLimiter
+import utilities.plot_world_map as pmap
+
+geolocator = Nominatim(user_agent="https://developer.twitter.com/en/apps/17403833") 
+   
+geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1,
+                      max_retries=3, error_wait_seconds=2)
+
+# Split it in batches and identify the locations
+step = 100
+
+for batch in range(0, august_df.shape[0], step):
+    batchstep = batch+step
+    if batchstep > august_df.shape[0]:
+        batchstep = batch + (august_df.shape[0]%step)
+    print(f'\nCalculating batch: {batch}-{batchstep}\n')
+    august_df['Point'] = august_df['Location'][batch:batchstep].apply(lambda x:
+        tcf.get_valid_coordinates(x, geolocator))
+
+dfWithCoords = august_df[august_df['Point'].notnull()]
+dfWithCoords['Latitude'] = dfWithCoords['Point'].apply(lambda x: x[0])
+dfWithCoords['Longitude'] = dfWithCoords['Point'].apply(lambda x: x[1])
+
+fig = pmap.create_tweet_worldmap(dfWithCoords)
+plot(fig)

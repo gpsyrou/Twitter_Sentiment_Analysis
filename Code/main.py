@@ -160,19 +160,13 @@ geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1,
                       max_retries=3, error_wait_seconds=2)
 
 # Split it in batches and identify the locations
-step = 100
+august_df_min = august_df.iloc[0:120]
 
-for batch in range(0, august_df.shape[0], step):
-    batchstep = batch+step
-    if batchstep > august_df.shape[0]:
-        batchstep = batch + (august_df.shape[0]%step)
-    print(f'\nCalculating batch: {batch}-{batchstep}\n')
-    august_df['Point'] = august_df['Location'][batch:batchstep].apply(lambda x:
-        tcf.get_valid_coordinates(x, geolocator))
+august_df_min['Point'] = august_df_min['Location'].apply(lambda x: tcf.get_valid_coordinates(x, geolocator))
 
-dfWithCoords = august_df[august_df['Point'].notnull()]
+dfWithCoords = august_df_min[august_df['Point'].notnull()]
 dfWithCoords['Latitude'] = dfWithCoords['Point'].apply(lambda x: x[0])
 dfWithCoords['Longitude'] = dfWithCoords['Point'].apply(lambda x: x[1])
 
 fig = pmap.create_tweet_worldmap(dfWithCoords)
-plot(fig)
+plt.plot(fig)

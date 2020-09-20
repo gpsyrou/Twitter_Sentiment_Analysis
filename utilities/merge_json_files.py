@@ -1,8 +1,6 @@
 """
 -------------------------------------------------------------------
--- Title:   Analysis of Coronavirus related Tweets using TwitterAPI
--- File:    merge_json_files.py
--- Purpose: Script used to merge the json files into a common txt file
+-- Project: Analysis of Coronavirus related Tweets using TwitterAPI
 -- Author:  Georgios Spyrou
 -- Last Updated:  10/09/2020
 -------------------------------------------------------------------
@@ -17,16 +15,16 @@ import pickle
 json_loc = r'D:\GitHub\Projects\Twitter_Project\Twitter_Topic_Modelling\twitter_config.json'
 
 with open(json_loc) as json_file:
-    configFile = json.load(json_file)
+    config = json.load(json_file)
 
 # Project folder location and keys
-os.chdir(configFile["project_directory"])
+os.chdir(config["project_directory"])
 
 import twitter_custom_functions as tcf
 
 # Read the data from the jsonl files
-jsonl_files_folder = os.path.join(configFile["project_directory"],
-                                  configFile["outputFiles"])
+jsonl_files_folder = os.path.join(config["project_directory"],
+                                  config["outputFiles"])
 
 # List that will contain all the Tweets that we managed to receive
 # via the use of the API

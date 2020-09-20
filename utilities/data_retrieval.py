@@ -1,10 +1,8 @@
 """
 -------------------------------------------------------------------
--- Title:   Analysis of Coronavirus related Tweets using TwitterAPI
--- File:    TwitterDataRetrieval.py
--- Purpose: Script used to retrieve the tweets through TwitterAPI.
+-- Project: Analysis of Coronavirus related Tweets using TwitterAPI
 -- Author:  Georgios Spyrou
--- Last Updated:    09/09/2020
+-- Last Updated:  09/09/2020
 -------------------------------------------------------------------
 """
 
@@ -24,17 +22,17 @@ from searchtweets import ResultStream
 json_loc = r'D:\GitHub\Projects\Twitter_Project\Twitter_Topic_Modelling\twitter_config.json'
 
 with open(json_loc) as json_file:
-    configFile = json.load(json_file)
+    config = json.load(json_file)
 
 # Project folder location and keys
-os.chdir(configFile["project_directory"])
+os.chdir(config["project_directory"])
 
 # Import the custom functions that we will use to retrieve and analyse
 # the data, and use the API to save the data to a .jsonl file.
 
 import twitter_custom_functions as tcf
 
-keys_yaml_location = configFile["keys"]
+keys_yaml_location = config["keys"]
 
 # Load the credentials to get access to the API
 premium_search_args = load_credentials(filename=keys_yaml_location,
@@ -75,7 +73,7 @@ for day in daysList:
         fromDate = hs[0]
         toDate = hs[1]
         # Create the searching rule for the stream
-        rule = gen_rule_payload(pt_rule=configFile['search_query'],
+        rule = gen_rule_payload(pt_rule=config['search_query'],
                                 from_date=fromDate,
                                 to_date=toDate ,
                                 results_per_call=100)
@@ -87,7 +85,7 @@ for day in daysList:
         # Create a .jsonl with the results of the Stream query
         #file_date = datetime.now().strftime('%Y_%m_%d_%H_%M')
         file_date = '_'.join(hs).replace(' ', '').replace(':','')
-        filename = os.path.join(configFile["outputFiles"],
+        filename = os.path.join(config["outputFiles"],
                                 f'twitter_30day_results_{file_date}.jsonl')
     
         # Write the data received from the API to a file

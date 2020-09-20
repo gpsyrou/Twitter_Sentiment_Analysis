@@ -1,9 +1,8 @@
 """
 -------------------------------------------------------------------
--- Title:   Analysis of Coronavirus related Tweets using TwitterAPI
--- File:    sentiment_class.py
--- Author:  Georgios Spyrou
--- Last Updated:  19/09/2020
+-- Project: Analysis of Coronavirus related Tweets using TwitterAPI
+-- Author: Georgios Spyrou
+-- Last Updated: 19/09/2020
 -------------------------------------------------------------------
 """
 

@@ -1,10 +1,8 @@
 """
 -------------------------------------------------------------------
--- Title:   Main Analysis of Coronavirus related Tweets retrieved via the TwitterAPI
--- File:    main.py
--- Purpose: Main script which contains the analysis regarding the tweets.
+-- Project:  Analysis of Coronavirus related Tweets using TwitterAPI
 -- Author:  Georgios Spyrou
--- Last Updated:    10/09/2020
+-- Last Updated:  10/09/2020
 -------------------------------------------------------------------
 """
 
@@ -20,10 +18,10 @@ from nltk.corpus import stopwords
 json_loc = r'D:\GitHub\Projects\Twitter_Project\Twitter_Topic_Modelling\twitter_config.json'
 
 with open(json_loc) as json_file:
-    configFile = json.load(json_file)
+    config = json.load(json_file)
 
 # Project folder location and keys
-os.chdir(configFile["project_directory"])
+os.chdir(config["project_directory"])
 
 import utilities.twitter_custom_functions as tcf
 from Code.sentiment_class import TwitterSentiment

@@ -6,7 +6,6 @@
 -------------------------------------------------------------------
 """
 import pandas as pd
-import pickle
 import json
 import os
 import sys
@@ -32,11 +31,11 @@ translated_tweets_filename = 'tweets_translated.csv'
 
 # Import the latest version of the csv that holds the translated data
 tweets_df = pd.read_csv(translated_tweets_filename, sep='\t',
-                        encoding = 'utf-8', index_col=None)
+                        encoding = 'utf-8', index_col=[0])
 
-tweets_df.head(5)
+tweets_df = tweets_df[tweets_df['Tweets_Clean'].notnull()].reset_index()
+
 # 1. Visualize the most common words across all tweets
-
 
 # All
 tweets_all_months = TwitterSentiment(input_df=tweets_df,

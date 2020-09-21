@@ -70,15 +70,6 @@ translated_tweets_filename = 'tweets_translated.csv'
 tweets_df['Tweet_Translated'] = tweets_df['Tweet'].apply(lambda text:
                                                     tcf.translate_tweet(text))
 
-tweets_df.to_csv(translated_tweets_filename, sep='\t', encoding='utf-8',
-                 index=False)
-
-
-
-# Import the latest version of the csv that holds the translated data
-tweets_df = pd.read_csv(translated_tweets_filename, sep='\t',
-                        encoding = 'utf-8', index_col=None)
-
 # Remove punctuation and stop words
 allStopWords = list(stopwords.words('english'))
 spanish_stopwords = list(stopwords.words('spanish'))
@@ -97,6 +88,16 @@ tweets_df['Tweets_Clean'] = tweets_df['Tweet_Translated'].apply(
         lambda x: tcf.remove_punct_and_stopwords(x, allStopWords, num_list))
 
 tweets_df = tweets_df[tweets_df['Tweets_Clean'].notnull()].reset_index()
+
+# Save the data
+tweets_df.to_csv(translated_tweets_filename, sep='\t', encoding='utf-8',
+                 index=False)
+
+
+# Import the latest version of the csv that holds the translated data
+tweets_df = pd.read_csv(translated_tweets_filename, sep='\t',
+                        encoding = 'utf-8', index_col=None)
+
 
 # 1. Visualize the most common words across all tweets
 

@@ -15,7 +15,7 @@ import seaborn as sns
 from nltk.corpus import stopwords
 
 import utilities.twitter_custom_functions as tcf
-from Code.sentiment_class import TwitterSentiment
+from sentiment_class import TwitterSentiment
 
 json_loc = r'D:\GitHub\Projects\Twitter_Project\Twitter_Topic_Modelling\twitter_config.json'
 

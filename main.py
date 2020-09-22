@@ -8,22 +8,18 @@
 import pandas as pd
 import json
 import os
-import sys
-sys.path.append('../') 
 import seaborn as sns
-
-from nltk.corpus import stopwords
-
-import utilities.twitter_custom_functions as tcf
-from sentiment_class import TwitterSentiment
 
 json_loc = r'D:\GitHub\Projects\Twitter_Project\Twitter_Topic_Modelling\twitter_config.json'
 
 with open(json_loc) as json_file:
     config = json.load(json_file)
-
+    
 # Project folder location and keys
 os.chdir(config["project_directory"])
+
+import utilities.twitter_custom_functions as tcf
+from sentiment_class import TwitterSentiment
 
 sns.set_style("darkgrid")
 
@@ -40,7 +36,7 @@ tweets_df = tweets_df[tweets_df['Tweets_Clean'].notnull()].reset_index()
 # All
 tweets_all_months = TwitterSentiment(input_df=tweets_df,
                                               tweet_column='Tweets_Clean')
-tweets_all_months.plot_most_common_words(figsize=(10, 8))
+tweets_all_months.plot_most_common_words(n_most_common=10, figsize=(10, 8))
 
 # August
 tweets_august = TwitterSentiment(input_df=tweets_df,

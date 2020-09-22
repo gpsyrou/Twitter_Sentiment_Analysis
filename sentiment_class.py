@@ -71,7 +71,7 @@ class TwitterSentiment:
         return self.common_words_df
 
 
-    def plot_most_common_words(self, figsize=(10, 10)) -> None:
+    def plot_most_common_words(self, n_most_common=20, figsize=(10, 10)) -> None:
     
         year_dict = {1:'January', 2:'February', 3:'March', 4:'April',
                      5:'May', 6:'June', 7:'July', 8:'August',
@@ -79,9 +79,9 @@ class TwitterSentiment:
                      12:'December'}
     
         fig, ax = plt.subplots(figsize=figsize)
-        common_words_df = self.most_common_words(tweet_column=self.tweet_column)
-        common_words_df.sort_values(by='count').plot.barh(x='words',
-                                   y='count', ax=ax, color='purple')
+        common_words_df = self.most_common_words(tweet_column=self.tweet_column, n_most_common=n_most_common)
+        barplot(x='count', y='words', data=common_words_df)
+
         plt.grid(True, alpha = 0.3, linestyle='-', color='black')
 
         if self.year is not None and self.month is not None:

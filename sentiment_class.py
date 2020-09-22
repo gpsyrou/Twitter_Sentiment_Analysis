@@ -19,16 +19,14 @@ from nltk import word_tokenize
 
 
 class TwitterSentiment:
- 
-    
+
     def __init__(self, input_df, tweet_column):
         self.df = input_df
         self.year = None
         self.month = None
         self.tweet_column = tweet_column
 
-          
-    def subset_dataframe(self, year:int, month: int):
+    def subset_dataframe(self, year: int, month: int):
         """
         Filter the master dataframe on a subset depending on a combination of
         year and month of interest.
@@ -41,15 +39,14 @@ class TwitterSentiment:
         elif month not in list(self.df['Month'].unique()):
             print('This month does not exist')
         else:
-            self.df = self.df[(self.df['Year']==year) &
-                              (self.df['Month']==month)]
-
+            self.df = self.df[(self.df['Year'] == year) &
+                              (self.df['Month'] == month)]
 
     def most_common_words(self, tweet_column: str, n_most_common=20):
         """
         Calculate the most common words of a categorical column, usually in a
         format of text.
-    
+
         Args:
         ------
             input_df: Dataframe that contains the relevant text column
@@ -59,39 +56,38 @@ class TwitterSentiment:
             n_most_common: Number of most common words to calculate
         Returns:
         --------
-            Pandas dataframe with two columns indicating a word and number 
+            Pandas dataframe with two columns indicating a word and number
             of times (count) that it appears in the original input_df
         """
         word_list = list([x.split() for x in self.df[self.tweet_column] if x is not None])
         word_counter = Counter(x for xs in word_list for x in set(xs))
         word_counter.most_common(n_most_common)
-        
-        self.common_words_df = DataFrame(word_counter.most_common(n_most_common),
-                                    columns=['words', 'count'])
+
+        self.common_words_df = DataFrame(word_counter.most_common(
+                n_most_common), columns=['words', 'count'])
         return self.common_words_df
 
-
     def plot_most_common_words(self, n_most_common=20, figsize=(10, 10)) -> None:
-    
-        year_dict = {1:'January', 2:'February', 3:'March', 4:'April',
-                     5:'May', 6:'June', 7:'July', 8:'August',
-                     9:'September', 10:'October', 11:'Novermber',
-                     12:'December'}
-    
+
+        year_dict = {1: 'January', 2: 'February', 3: 'March', 4: 'April',
+                     5: 'May', 6: 'June', 7: 'July', 8: 'August',
+                     9: 'September', 10: 'October', 11: 'Novermber',
+                     12: 'December'}
+
         fig, ax = plt.subplots(figsize=figsize)
-        common_words_df = self.most_common_words(tweet_column=self.tweet_column, n_most_common=n_most_common)
+        common_words_df = self.most_common_words(tweet_column=self.tweet_column,
+                                                 n_most_common=n_most_common)
         barplot(x='count', y='words', data=common_words_df)
 
-        plt.grid(True, alpha = 0.3, linestyle='-', color='black')
+        plt.grid(True, alpha=0.3, linestyle='-', color='black')
 
         if self.year is not None and self.month is not None:
             ax.set_title(f'Common Words Found in Tweets - {year_dict[self.month]} {self.year}',
                                                            fontweight='bold')
         else:
-            ax.set_title(f'Common Words Found in Tweets', fontweight='bold')                
+            ax.set_title(f'Common Words Found in Tweets', fontweight='bold')         
         plt.show()
 
-        
     def plot_wordcloud(self, figsize=(10, 10)) -> None:
         """
         Generate a WordCloud plot based on the number of occurenences of words
@@ -103,17 +99,16 @@ class TwitterSentiment:
         plt.imshow(wordcloud, interpolation='bilinear')
         plt.axis("off")
         plt.show()
-        
-        
+
     def compute_bigrams(self) -> dict:
         """
         Calculate the number of occurences that a pair of words appear next to
         each other, and return a dictionary of pair of words - count.
         """
         tweets_to_string = ' '.join([x for x in self.df[self.tweet_column]])
-    
+
         finder = BigramCollocationFinder.from_words(word_tokenize(tweets_to_string))
-        
+
         bigrams_dict = {}
         for k, v in finder.ngram_fd.items():
             # Condition to avoid characters like '@' and '#'
@@ -121,18 +116,17 @@ class TwitterSentiment:
                 bigrams_dict[k] = v
             else:
                 continue
-        return bigrams_dict        
+        return bigrams_dict
 
-           
     def plot_bigrams(self, top_n: int, figsize=(10, 8)) -> None:
-        
+
         bigrams_dict = self.compute_bigrams()
         sortedBiGrams = sorted(bigrams_dict.items(), key=lambda x: x[1],
                                reverse=True)[0:top_n]
-        
+
         bgram, counts = list(zip(*sortedBiGrams))
         bgstring = list(map(lambda txt: '-'.join(txt), bgram))
-        
+
         plt.figure(figsize=figsize)
         g = barplot(bgstring, counts, palette='muted')
         g.set_xticklabels(g.get_xticklabels(), rotation=80)
@@ -140,30 +134,29 @@ class TwitterSentiment:
                   fontweight='bold')
         plt.ylabel('Count')
         plt.grid(True, alpha=0.2, color='black')
-        plt.show()       
+        plt.show()    
 
-    
     def liu_hu_opinion_lexicon(self, sentence: str) -> str:
         """
         Modified version of the Liu Hu opinion lexicon algorithm for sentiment
         analysis on sentences.
         Reference: https://www.nltk.org/_modules/nltk/sentiment/util.html#demo_liu_hu_lexicon
-        
+
         The function has been modified to return the values instead of printing
-        
+
         Returns:
         --------
         Sentiment of a text, classified as 'Positive','Negative' or 'Neutral'
         """
-        
+
         from nltk.corpus import opinion_lexicon
         from nltk.tokenize import treebank
     
         tokenizer = treebank.TreebankWordTokenizer()
-        pos_words, neg_words = 0,0
+        pos_words, neg_words = 0, 0
         y = []
         tokenized_sent = [word.lower() for word in tokenizer.tokenize(sentence)]
-    
+
         for word in tokenized_sent:
             if word in opinion_lexicon.positive():
                 pos_words += 1
@@ -179,14 +172,12 @@ class TwitterSentiment:
         elif pos_words < neg_words:
             return('Negative')
         elif pos_words == neg_words:
-            return('Neutral')   
+            return('Neutral')
 
-          
     def calculate_sentiment(self):
         self.df['Sentiment'] = self.df[self.tweet_column].apply(lambda tweet:
             self.liu_hu_opinion_lexicon(tweet))
-
-            
+   
     def plot_sentiment(self, figsize=(10, 8)) -> None:
         plt.figure(figsize=figsize)
         g = countplot(x='Sentiment', data=self.df,
@@ -196,4 +187,3 @@ class TwitterSentiment:
         plt.ylabel('Count', labelpad=8)
         plt.xlabel('Sentiment', labelpad=8)
         plt.show()
-          

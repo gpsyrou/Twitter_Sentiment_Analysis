@@ -2,11 +2,11 @@ import pandas as pd
 import pickle
 import json
 import os
-import sys
-sys.path.append('../') 
 import seaborn as sns
-
 from nltk.corpus import stopwords
+
+import sys
+sys.path.append('../')
 
 import utilities.twitter_custom_functions as tcf
 from sentiment_class import TwitterSentiment
@@ -23,10 +23,10 @@ sns.set_style("darkgrid")
 
 all_tweets_list_file_loc = r'all_tweets_list.txt'
 
-with open (all_tweets_list_file_loc, 'rb') as file:
+with open(all_tweets_list_file_loc, 'rb') as file:
     allTweetsList = pickle.load(file)
 
-# Create a dataframe based on the relevant data from the full list of the 
+# Create a dataframe based on the relevant data from the full list of the
 # received tweets
 user_ls, userid_ls, tweet_ls = [], [], []
 location_ls, datetime_ls, replyto_ls = [], [], []
@@ -69,7 +69,7 @@ spanish_stopwords = list(stopwords.words('spanish'))
 # Remove common words or punctuation used in tweets plus the term that we
 # used for the query
 commonTwitterStopwords = ['rt', 'RT', 'retweet', 'new', 'via', 'us', 'u',
-                          'covid','coronavirus', '2019', 'coronavírus',
+                          'covid', 'coronavirus', '2019', 'coronavírus',
                           '#coronavirus', '19', '#covid', '#covid19',
                           '#covid2019', '…', '...', '“', '”', '‘', '’']
 

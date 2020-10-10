@@ -5,10 +5,17 @@
 ### Log:
     1) 15/02/2020: The TwitterAPI has a limit of 5000 tweets for the FullArchive version, and 25000 for the 30day version.
 		   Need to find a way to receive data for each day for a month period, as the API does not seem to provide this functionality.
-    2) 01/03/2020: Version one completed. It included analysis for tweets from 17/01/2020 to 29/02/2020.
+    2) 01/03/2020: Version one completed. It included analysis for tweets from 17/01/2020 to 29/02/2020.Tw
 		   The analysis is focused on the words that appear frequently in the tweets, as well as analysis on bigrams (words that appear next to each other).
 		   Finally we include some analysis on the sentiment of the tweets by using the Hiu Lu opinion lexicon algorithm.
     3) 07/03/2020: TO DO: 1) Find a way to handle non-english tweets (translation) 2) Long/Lat coordinates 
+
+
+### Running Guide for Data Retrieval
+1. Run **data_retrieval.py** to get tweets for a specific period. The script is taking as parameters the start and end date we want to receive data from . It is not recommended to retrieve data for more than a 2-day period in a single API call, as the Twitter API has limits.<br/>
+	`python data_retrieval.py 2020-05-15 2020-05-17`
+2. Combine the retrieved jsonl files by using the merge_json_files.py script. This will output a text file the contains the combined data<br/>
+	`python merge_json_files.py`
 
 ### Useful material while developing:
 1) https://twitterdev.github.io/do_more_with_twitter_data/finding_the_right_data.html

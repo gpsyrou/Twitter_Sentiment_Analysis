@@ -40,6 +40,8 @@ for tweet_dict in allTweetsList:
     location_ls.append(tweet_dict['user']['location'])
     datetime_ls.append(tweet_dict['created_at'])
 
+print('removing hyperlink finished..')
+
 # Dataframe that contains the data for analysis
 # Note: The twitter API functionality is very broad in what data we can analyse
 # This project will focus on tweets and with their respective location/date.

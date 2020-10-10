@@ -11,11 +11,13 @@
     3) 07/03/2020: TO DO: 1) Find a way to handle non-english tweets (translation) 2) Long/Lat coordinates 
 
 
-### Running Guide for Data Retrieval
+### Running Guide for Data Retrieval and Preprocessing
 1. Run **data_retrieval.py** to get tweets for a specific period. The script is taking as parameters the start and end date we want to receive data from . It is not recommended to retrieve data for more than a 2-day period in a single API call, as the Twitter API has limits.<br/>
 	`python data_retrieval.py 2020-05-15 2020-05-17`
 2. Combine the retrieved jsonl files by using the merge_json_files.py script. This will output a text file the contains the combined data<br/>
 	`python merge_json_files.py`
+3. The data contained in the output text file from step 2 require some preprocessing before we analyze them. In this step we are using the data_preprocessing.py scripts which picks the required data of interest from the text file, removes blank tweets, clean the tweets from hyperlinks, applies translation to the text, and more.<br/>
+	`python data_preprocessing.py`
 
 ### Useful material while developing:
 1) https://twitterdev.github.io/do_more_with_twitter_data/finding_the_right_data.html

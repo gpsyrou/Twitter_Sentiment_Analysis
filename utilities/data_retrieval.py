@@ -36,7 +36,7 @@ keys_yaml_location = config["keys"]
 
 # Load the credentials to get access to the API
 premium_search_args = load_credentials(filename=keys_yaml_location,
-                                       yaml_key="search_tweets_api_fullarchive",
+                                       yaml_key="search_tweets_api_30day",
                                        env_overwrite=False)
 print(premium_search_args)
 

@@ -65,7 +65,7 @@ tweets_df['Tweet_Translated'] = tweets_df['Tweet'].apply(lambda text:
                                                     tcf.translate_tweet(text))
 
 # Remove punctuation and stop words
-allStopWords = list(stopwords.words('english'))
+stopwords_full = list(stopwords.words('english'))
 spanish_stopwords = list(stopwords.words('spanish'))
 
 # Remove common words or punctuation used in tweets plus the term that we
@@ -75,11 +75,11 @@ commonTwitterStopwords = ['rt', 'RT', 'retweet', 'new', 'via', 'us', 'u',
                           '#coronavirus', '19', '#covid', '#covid19',
                           '#covid2019', '…', '...', '“', '”', '‘', '’']
 
-allStopWords.extend(commonTwitterStopwords + spanish_stopwords)
+stopwords_full.extend(commonTwitterStopwords + spanish_stopwords)
 num_list = '0123456789'
 
 tweets_df['Tweets_Clean'] = tweets_df['Tweet_Translated'].apply(
-        lambda x: tcf.remove_punct_and_stopwords(x, allStopWords, num_list))
+        lambda x: tcf.remove_punct_and_stopwords(x, stopwords_full, num_list))
 
 tweets_df = tweets_df[tweets_df['Tweets_Clean'].notnull()].reset_index()
 

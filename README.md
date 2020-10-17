@@ -29,3 +29,4 @@
 7) https://developer.twitter.com/en/docs/tweets/search/overview/premium
 8) https://geopy.readthedocs.io/en/latest/#geopy.extra.rate_limiter.RateLimiter
 9) https://plot.ly/python/map-configuration/
+10) https://medium.com/@yanlinc/how-to-build-a-lda-topic-model-using-from-text-601cdcbfd3a6

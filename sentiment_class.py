@@ -85,7 +85,7 @@ class TwitterSentiment:
             ax.set_title(f'Common Words Found in Tweets - {year_dict[self.month]} {self.year}',
                                                            fontweight='bold')
         else:
-            ax.set_title(f'Common Words Found in Tweets', fontweight='bold')         
+            ax.set_title(f'Common Words Found in Tweets - Overall', fontweight='bold')         
         plt.show()
 
     def plot_wordcloud(self, figsize=(10, 10)) -> None:

@@ -41,4 +41,4 @@ out_filename = 'all_tweets_list.txt'
 with open(out_filename, 'wb') as file:
     pickle.dump(all_tweets, file)
 
-print(f'The text file has saved {int(len(all_tweets))} tweets in {out_filename}')
+print(f'There are {int(len(all_tweets))} tweets saved in {out_filename}')

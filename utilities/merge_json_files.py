@@ -26,7 +26,7 @@ jsonl_files_folder = os.path.join(config["project_directory"],
 
 all_tweets = []
 
-print('Merging the json files...')
+print('Merging {0} json files...'.format(len(os.listdir(jsonl_files_folder))))
 
 for file in os.listdir(jsonl_files_folder):
     if 'twitter' in file:

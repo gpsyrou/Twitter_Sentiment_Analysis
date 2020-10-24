@@ -186,16 +186,18 @@ class TwitterSentiment:
         self.df['Sentiment'] = self.df[self.tweet_column].apply(lambda tweet:
             self.liu_hu_opinion_lexicon(tweet))
    
-    def plot_sentiment(self, sentiment_month=None, figsize=(10, 8)) -> None:
+    def plot_sentiment(self, sentiment_month=None, year=None, figsize=(10, 8)) -> None:
         plt.figure(figsize=figsize)
         if sentiment_month is not None:
             sentiment_df = self.df[self.df['Month'] == sentiment_month]
+            title_str = f'Sentiment Classification of Tweets - {month_as_string(sentiment_month)} {year}'
         else:
             sentiment_df = self.df
+            title_str = 'Sentiment Classification of Tweets'
         clr_palette = {'Positive': '#37B41E', 'Neutral': '#1B9EC8', 'Negative':'#C92528'}
         g = countplot(x='Sentiment', data=sentiment_df, palette=clr_palette)
         g.set_xticklabels(g.get_xticklabels(), rotation=0)
-        plt.title('Sentiment Classification of Tweets', fontweight='bold')
+        plt.title(title_str, fontweight='bold')
         plt.ylabel('Count', labelpad=8)
         plt.xlabel('Sentiment', labelpad=8)
         plt.show()

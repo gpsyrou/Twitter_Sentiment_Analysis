@@ -18,6 +18,19 @@ from nltk.collocations import BigramCollocationFinder
 from nltk import word_tokenize
 
 
+def month_as_string(month_as_int: int) -> str:
+    """
+    Take an integer as input representing a month, and return the corresponding
+    month as a string (e.g. 1 -> January)
+    """
+    year_dict = {1: 'January', 2: 'February', 3: 'March', 4: 'April',
+            5: 'May', 6: 'June', 7: 'July', 8: 'August',
+            9: 'September', 10: 'October', 11: 'Novermber',
+            12: 'December'}
+    
+    return year_dict[month_as_int]
+
+
 class TwitterSentiment:
 
     def __init__(self, input_df, tweet_column):
@@ -69,11 +82,6 @@ class TwitterSentiment:
 
     def plot_most_common_words(self, n_most_common=20, figsize=(10, 10)) -> None:
 
-        year_dict = {1: 'January', 2: 'February', 3: 'March', 4: 'April',
-                     5: 'May', 6: 'June', 7: 'July', 8: 'August',
-                     9: 'September', 10: 'October', 11: 'Novermber',
-                     12: 'December'}
-
         fig, ax = plt.subplots(figsize=figsize)
         common_words_df = self.most_common_words(tweet_column=self.tweet_column,
                                                  n_most_common=n_most_common)
@@ -82,7 +90,7 @@ class TwitterSentiment:
         plt.grid(True, alpha=0.3, linestyle='-', color='black')
 
         if self.year is not None and self.month is not None:
-            ax.set_title(f'Common Words Found in Tweets - {year_dict[self.month]} {self.year}',
+            ax.set_title(f'Common Words Found in Tweets - {month_as_string(self.month)} {self.year}',
                                                            fontweight='bold')
         else:
             ax.set_title(f'Common Words Found in Tweets - Overall', fontweight='bold')         

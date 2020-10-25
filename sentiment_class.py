@@ -18,6 +18,19 @@ from nltk.collocations import BigramCollocationFinder
 from nltk import word_tokenize
 
 
+def month_as_string(month_as_int: int) -> str:
+    """
+    Take an integer as input representing a month, and return the corresponding
+    month as a string (e.g. 1 -> January)
+    """
+    year_dict = {1: 'January', 2: 'February', 3: 'March', 4: 'April',
+            5: 'May', 6: 'June', 7: 'July', 8: 'August',
+            9: 'September', 10: 'October', 11: 'Novermber',
+            12: 'December'}
+    
+    return year_dict[month_as_int]
+
+
 class TwitterSentiment:
 
     def __init__(self, input_df, tweet_column):
@@ -69,11 +82,6 @@ class TwitterSentiment:
 
     def plot_most_common_words(self, n_most_common=20, figsize=(10, 10)) -> None:
 
-        year_dict = {1: 'January', 2: 'February', 3: 'March', 4: 'April',
-                     5: 'May', 6: 'June', 7: 'July', 8: 'August',
-                     9: 'September', 10: 'October', 11: 'Novermber',
-                     12: 'December'}
-
         fig, ax = plt.subplots(figsize=figsize)
         common_words_df = self.most_common_words(tweet_column=self.tweet_column,
                                                  n_most_common=n_most_common)
@@ -82,7 +90,7 @@ class TwitterSentiment:
         plt.grid(True, alpha=0.3, linestyle='-', color='black')
 
         if self.year is not None and self.month is not None:
-            ax.set_title(f'Common Words Found in Tweets - {year_dict[self.month]} {self.year}',
+            ax.set_title(f'Common Words Found in Tweets - {month_as_string(self.month)} {self.year}',
                                                            fontweight='bold')
         else:
             ax.set_title(f'Common Words Found in Tweets - Overall', fontweight='bold')         
@@ -178,16 +186,18 @@ class TwitterSentiment:
         self.df['Sentiment'] = self.df[self.tweet_column].apply(lambda tweet:
             self.liu_hu_opinion_lexicon(tweet))
    
-    def plot_sentiment(self, sentiment_month=None, figsize=(10, 8)) -> None:
+    def plot_sentiment(self, sentiment_month=None, year=None, figsize=(10, 8)) -> None:
         plt.figure(figsize=figsize)
         if sentiment_month is not None:
             sentiment_df = self.df[self.df['Month'] == sentiment_month]
+            title_str = f'Sentiment Classification of Tweets - {month_as_string(sentiment_month)} {year}'
         else:
             sentiment_df = self.df
+            title_str = 'Sentiment Classification of Tweets'
         clr_palette = {'Positive': '#37B41E', 'Neutral': '#1B9EC8', 'Negative':'#C92528'}
         g = countplot(x='Sentiment', data=sentiment_df, palette=clr_palette)
         g.set_xticklabels(g.get_xticklabels(), rotation=0)
-        plt.title('Sentiment Classification of Tweets', fontweight='bold')
+        plt.title(title_str, fontweight='bold')
         plt.ylabel('Count', labelpad=8)
         plt.xlabel('Sentiment', labelpad=8)
         plt.show()

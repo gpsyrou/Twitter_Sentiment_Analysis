@@ -35,7 +35,7 @@ def create_tweet_worldmap(df: pd.core.frame.DataFrame):
                                      			cmin = 0,
             )))
     
-    fig.update_layout(title = 'COVID-19 related Tweets across the world (January 2020 - March 2020) ',
+    fig.update_layout(title = 'COVID-19 related Tweets across the world (January 2020 - October 2020) ',
                       geo_scope='world',
                       			geo = dict(
             			resolution = 110,

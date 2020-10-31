@@ -164,7 +164,7 @@ def get_valid_coordinates(location: str, geolocator: Nominatim) -> list:
     """
     
     try:
-        if location is not None:
+        if (location is not None) and (str(location) != 'nan'):
             print(f'Location:.... {location}')
             try:
                 coordinates = geolocator.geocode(location)

@@ -195,7 +195,7 @@ class TwitterSentiment:
             sentiment_df = self.df
             title_str = 'Sentiment Classification of Tweets'
         clr_palette = {'Positive': '#37B41E', 'Neutral': '#1B9EC8', 'Negative':'#C92528'}
-        g = countplot(x='Sentiment', data=sentiment_df, palette=clr_palette)
+        g = countplot(x='Sentiment', data=sentiment_df, palette=clr_palette, order=['Negative', 'Neutral', 'Positive'])
         g.set_xticklabels(g.get_xticklabels(), rotation=0)
         plt.title(title_str, fontweight='bold')
         plt.ylabel('Count', labelpad=8)

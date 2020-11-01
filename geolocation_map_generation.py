@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from datetime import datetime
 import time
 from geopy.geocoders import Nominatim
@@ -19,19 +20,20 @@ def get_valid_coordinates(location: str, geolocator: Nominatim) -> list:
     return the Latitude and Longitude coordinates of each entry. 
     If an entry does not correspond to a place (e.g. 'abcdef') then return None.
     """
-    try:
-        print(f'Location:.... {location}')
+    if (location is not None) and (str(location) != 'nan'):
         try:
-            coordinates = geolocator.geocode(location)
-            lat = coordinates.point[0]
-            long = coordinates.point[1]
-            return [lat, long]
-        except AttributeError:
-            return None
-        else:
-            pass
-    except GeocoderTimedOut:
-        return get_valid_coordinates(location, geolocator)
+            print(f'Location:.... {location}')
+            try:
+                coordinates = geolocator.geocode(location)
+                lat = coordinates.point[0]
+                long = coordinates.point[1]
+                return lat, long
+            except AttributeError:
+                return None, None
+            else:
+                return None, None
+        except GeocoderTimedOut:
+            return get_valid_coordinates(location, geolocator)
 
 
 translated_tweets_filename = 'tweets_translated.csv'
@@ -52,7 +54,10 @@ for i in range(0, tweets_february.df.shape[0]):
         print("date and time =", dt_string)
     
     print('Index.. {0}'.format(i))
-    coords = get_valid_coordinates(tweets_february.df['Location'].iloc[i], geolocator)
-    tweets_february.df.loc[i, 'Latitude'] = coords[0]
-    tweets_february.df.loc[i, 'Longitude'] = coords[1]
-    print('\nLocation found in: {0}'.format(coords))
+    latitude, longitude = get_valid_coordinates(tweets_february.df['Location'].iloc[i], geolocator)
+    if (coords[0] is None) & (coords[1] is None):
+        continue
+    else:
+        tweets_february.df.loc[i, 'Latitude'] = latitude
+        tweets_february.df.loc[i, 'Longitude'] = longitude
+        print('Location found in: {0}'.format(coords))

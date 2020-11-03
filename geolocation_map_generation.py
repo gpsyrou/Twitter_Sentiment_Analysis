@@ -1,3 +1,11 @@
+"""
+-------------------------------------------------------------------
+-- Project: Analysis of Coronavirus related Tweets using TwitterAPI
+-- Author:  Georgios Spyrou
+-- Last Updated:  03/11/2020
+-------------------------------------------------------------------
+"""
+
 import pandas as pd
 import numpy as np
 from datetime import datetime
@@ -9,10 +17,11 @@ from geopy.exc import GeocoderTimedOut
 import utilities.plot_world_map as pmap
 from sentiment_class import TwitterSentiment, month_as_string
 
-
 geolocator = Nominatim(user_agent="https://developer.twitter.com/en/apps/17403833") 
    
 geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1, max_retries=3, error_wait_seconds=2)
+
+translated_tweets_filename = 'tweets_translated.csv'
 
 def get_valid_coordinates(location: str, geolocator: Nominatim) -> list:
     """
@@ -36,16 +45,11 @@ def get_valid_coordinates(location: str, geolocator: Nominatim) -> list:
             return 'No latitude', 'No longitude'
 
 
-translated_tweets_filename = 'tweets_translated.csv'
 tweets_df = pd.read_csv(translated_tweets_filename, sep='\t', encoding = 'utf-8', index_col=[0])
 
 tweets_df = tweets_df[tweets_df['Tweets_Clean'].notnull()].reset_index()
 
-tweets_february = TwitterSentiment(input_df=tweets_df, tweet_column='Tweets_Clean')
-tweets_february.subset_dataframe(year=2020, month=2)
-tweets_february.df.shape
-
-df_with_coordinates = tweets_february.df.head(100)
+df_with_coordinates = tweets_df.copy()
 df_with_coordinates.reset_index(drop=True, inplace=True)
 
 
@@ -65,4 +69,4 @@ for i in range(0, df_with_coordinates.shape[0]):
     df_with_coordinates.loc[i, 'Longitude'] = longitude
     print('Location found in: [{0}, {1}]'.format(latitude, longitude))
 
-df_with_coordinates.to_csv('test.csv', sep='\t', encoding='utf-8', index=False)
+df_with_coordinates.to_csv('tweets_with_geolocation.csv', sep='\t', encoding='utf-8', index=False)

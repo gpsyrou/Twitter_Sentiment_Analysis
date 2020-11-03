@@ -45,8 +45,9 @@ tweets_february = TwitterSentiment(input_df=tweets_df, tweet_column='Tweets_Clea
 tweets_february.subset_dataframe(year=2020, month=2)
 tweets_february.df.shape
 
+df_with_coordinates = tweets_february.df.iloc[0:100].copy()
 
-for i in range(0, tweets_february.df.shape[0]):
+for i in range(0, df_with_coordinates.shape[0]):
     if (i != 0) and (i%100 == 0):
         time.sleep(180)
         now = datetime.now()
@@ -54,10 +55,12 @@ for i in range(0, tweets_february.df.shape[0]):
         print("date and time =", dt_string)
     
     print('Index.. {0}'.format(i))
-    latitude, longitude = get_valid_coordinates(tweets_february.df['Location'].iloc[i], geolocator)
-    if (coords[0] is None) & (coords[1] is None):
-        continue
-    else:
-        tweets_february.df.loc[i, 'Latitude'] = latitude
-        tweets_february.df.loc[i, 'Longitude'] = longitude
-        print('Location found in: {0}'.format(coords))
+    location = df_with_coordinates['Location'].iloc[i]
+    if (location is not None) and (str(location) != 'nan'):
+        latitude, longitude = get_valid_coordinates(location, geolocator)
+
+        df_with_coordinates.loc[i, 'Latitude'] = latitude
+        df_with_coordinates.loc[i, 'Longitude'] = longitude
+        print('Location found in: [{0}, {1}]'.format(latitude, longitude))
+
+df_with_coordinates.to_csv('test.csv', sep='\t', encoding='utf-8', index=False)

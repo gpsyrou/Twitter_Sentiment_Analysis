@@ -77,4 +77,4 @@ for i in range(0, df_with_coordinates.shape[0]):
     print('Location found in: [{0}, {1}]'.format(latitude, longitude))
 
 month = month_as_string(input_month)
-df_with_coordinates.to_csv('tweets_with_geolocation_{month}_{input_year}.csv', sep='\t', encoding='utf-8', index=False)
+df_with_coordinates.to_csv(f'tweets_with_geolocation_{month}_{input_year}.csv', sep='\t', encoding='utf-8', index=False)

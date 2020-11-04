@@ -13,6 +13,7 @@ import time
 from geopy.geocoders import Nominatim
 from geopy.extra.rate_limiter import RateLimiter
 from geopy.exc import GeocoderTimedOut
+from sentiment_class import month_as_string
 
 import utilities.plot_world_map as pmap
 from sentiment_class import TwitterSentiment, month_as_string
@@ -22,6 +23,9 @@ geolocator = Nominatim(user_agent="https://developer.twitter.com/en/apps/1740383
 geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1, max_retries=3, error_wait_seconds=2)
 
 translated_tweets_filename = 'tweets_translated.csv'
+
+input_year = 2020
+input_month = 2
 
 def get_valid_coordinates(location: str, geolocator: Nominatim) -> list:
     """
@@ -49,13 +53,16 @@ tweets_df = pd.read_csv(translated_tweets_filename, sep='\t', encoding = 'utf-8'
 
 tweets_df = tweets_df[tweets_df['Tweets_Clean'].notnull()].reset_index()
 
-df_with_coordinates = tweets_df.copy()
+df_subset = TwitterSentiment(input_df=tweets_df, tweet_column='Tweets_Clean')
+df_subset.subset_dataframe(year=input_year, month=input_month)
+
+df_with_coordinates = df_subset.df
 df_with_coordinates.reset_index(drop=True, inplace=True)
 
 
 for i in range(0, df_with_coordinates.shape[0]):
     if (i != 0) and (i%100 == 0):
-        time.sleep(180)
+        time.sleep(120)
         now = datetime.now()
         dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
         print("date and time =", dt_string)
@@ -69,4 +76,5 @@ for i in range(0, df_with_coordinates.shape[0]):
     df_with_coordinates.loc[i, 'Longitude'] = longitude
     print('Location found in: [{0}, {1}]'.format(latitude, longitude))
 
-df_with_coordinates.to_csv('tweets_with_geolocation.csv', sep='\t', encoding='utf-8', index=False)
+month = month_as_string(input_month)
+df_with_coordinates.to_csv('tweets_with_geolocation_{month}_{input_year}.csv', sep='\t', encoding='utf-8', index=False)

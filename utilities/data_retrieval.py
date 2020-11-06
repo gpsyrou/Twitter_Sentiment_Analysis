@@ -85,7 +85,7 @@ for day in daysList:
         # Create a .jsonl with the results of the Stream query
         #file_date = datetime.now().strftime('%Y_%m_%d_%H_%M')
         file_date = '_'.join(hs).replace(' ', '').replace(':','')
-        filename = os.path.join(config["outputFiles"],
+        filename = os.path.join(config["raw_data_folder"],
                                 f'twitter_30day_results_{file_date}.jsonl')
     
         # Write the data received from the API to a file

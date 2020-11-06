@@ -22,7 +22,7 @@ import twitter_custom_functions as tcf
 
 # Read the data from the jsonl files
 jsonl_files_folder = os.path.join(config["project_directory"],
-                                  config["outputFiles"])
+                                  config["raw_data_folder"])
 
 all_tweets = []
 

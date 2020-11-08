@@ -91,4 +91,6 @@ for i in range(0, df_with_coordinates.shape[0]):
     print('Location found in: [{0}, {1}]'.format(latitude, longitude))
 
 month = month_as_string(args.input_month)
-df_with_coordinates.to_csv(f'tweets_with_geolocation_{month}_{args.input_year}.csv', sep='\t', encoding='utf-8', index=False)
+
+geoloc_filaname = os.path.join(config['geolocation_data_folder'], f'tweets_with_geolocation_{month}_{args.input_year}.csv')
+df_with_coordinates.to_csv(geoloc_filaname, sep='\t', encoding='utf-8', index=False)

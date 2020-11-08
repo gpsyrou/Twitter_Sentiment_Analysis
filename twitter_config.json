@@ -2,6 +2,7 @@
 {
 "search_query" : "coronavirus OR covid lang:en",
 "project_directory" : "D:\\GitHub\\Projects\\Twitter_Project\\Twitter_Topic_Modelling",
-"outputFiles" : "D:\\GitHub\\Projects\\Twitter_Project\\Twitter_Topic_Modelling\\output_files",
+"raw_data_folder" : "D:\\GitHub\\Projects\\Twitter_Project\\Twitter_Topic_Modelling\\output_files\\raw_data",
+"geolocation_data_folder" : "D:\\GitHub\\Projects\\Twitter_Project\\Twitter_Topic_Modelling\\output_files\\geolocation_data",
 "keys" : "D:\\GitHub\\Projects\\Twitter_Project\\Twitter_Topic_Modelling\\twitter_keys.yaml"
 }

@@ -8,6 +8,7 @@
 import os
 import time
 import matplotlib.pyplot as plt
+from datetime import datetime
 
 from collections import Counter
 from pandas import DataFrame
@@ -228,6 +229,10 @@ class TwitterSentiment:
         plt.show()
 
     def calculate_geolocation_coordinates(self):
+        geolocator = Nominatim(user_agent="https://developer.twitter.com/en/apps/17403833") 
+   
+        geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1, max_retries=3, error_wait_seconds=2)
+
         for i in range(0, self.df.shape[0]):
             if (i != 0) and (i%100 == 0):
                 time.sleep(120)
@@ -243,8 +248,3 @@ class TwitterSentiment:
             self.df.loc[i, 'Latitude'] = latitude
             self.df.loc[i, 'Longitude'] = longitude
             print('Location found in: [{0}, {1}]'.format(latitude, longitude))
-
-            month = month_as_string(args.input_month)
-
-            geoloc_filaname = os.path.join(config['geolocation_data_folder'], f'tweets_with_geolocation_{month}_{args.input_year}.csv')
-            df_with_coordinates.to_csv(geoloc_filaname, sep='\t', encoding='utf-8', index=False)

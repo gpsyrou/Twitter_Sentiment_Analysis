@@ -92,5 +92,5 @@ for i in range(0, df_with_coordinates.shape[0]):
 
 month = month_as_string(args.input_month)
 
-geoloc_filaname = os.path.join(config['geolocation_data_folder'], f'tweets_with_geolocation_{month}_{args.input_year}.csv')
-df_with_coordinates.to_csv(geoloc_filaname, sep='\t', encoding='utf-8', index=False)
+geoloc_filename = os.path.join(config['geolocation_data_folder'], f'tweets_with_geolocation_{month}_{args.input_year}.csv')
+df_with_coordinates.to_csv(geoloc_filename, sep='\t', encoding='utf-8', index=False)

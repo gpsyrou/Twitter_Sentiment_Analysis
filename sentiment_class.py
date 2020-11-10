@@ -23,6 +23,11 @@ from geopy.geocoders import Nominatim
 from geopy.extra.rate_limiter import RateLimiter
 from geopy.exc import GeocoderTimedOut
 
+
+geolocator = Nominatim(user_agent="https://developer.twitter.com/en/apps/17403833") 
+
+geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1, max_retries=3, error_wait_seconds=2)
+
 def month_as_string(month_as_int: int) -> str:
     """
     Take an integer as input representing a month, and return the corresponding
@@ -229,10 +234,7 @@ class TwitterSentiment:
         plt.show()
 
     def calculate_geolocation_coordinates(self):
-        geolocator = Nominatim(user_agent="https://developer.twitter.com/en/apps/17403833") 
-   
-        geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1, max_retries=3, error_wait_seconds=2)
-
+        self.df.reset_index(drop=True, inplace=True)
         for i in range(0, self.df.shape[0]):
             if (i != 0) and (i%100 == 0):
                 time.sleep(120)

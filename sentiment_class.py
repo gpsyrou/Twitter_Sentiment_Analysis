@@ -5,7 +5,8 @@
 -- Last Updated: 19/09/2020
 -------------------------------------------------------------------
 """
-
+import os
+import time
 import matplotlib.pyplot as plt
 
 from collections import Counter
@@ -17,6 +18,9 @@ from seaborn import barplot, countplot
 from nltk.collocations import BigramCollocationFinder
 from nltk import word_tokenize
 
+from geopy.geocoders import Nominatim
+from geopy.extra.rate_limiter import RateLimiter
+from geopy.exc import GeocoderTimedOut
 
 def month_as_string(month_as_int: int) -> str:
     """
@@ -30,6 +34,27 @@ def month_as_string(month_as_int: int) -> str:
     
     return year_dict[month_as_int]
 
+
+def get_valid_coordinates(location: str, geolocator: Nominatim) -> list:
+    """
+    Given a string which is pointing to specific location (e.g. 'London'),
+    return the Latitude and Longitude coordinates of each entry. 
+    If an entry does not correspond to a place (e.g. 'abcdef') then return None.
+    """
+    if (location is not None) and (str(location) != 'nan'):
+        try:
+            print(f'Location:.... {location}')
+            try:
+                coordinates = geolocator.geocode(location)
+                lat = coordinates.point[0]
+                long = coordinates.point[1]
+                return lat, long
+            except AttributeError:
+                return 'No latitude', 'No longitude'
+        except GeocoderTimedOut:
+            return get_valid_coordinates(location, geolocator)
+    else:
+            return 'No latitude', 'No longitude'
 
 class TwitterSentiment:
 
@@ -201,3 +226,25 @@ class TwitterSentiment:
         plt.ylabel('Count', labelpad=8)
         plt.xlabel('Sentiment', labelpad=8)
         plt.show()
+
+    def calculate_geolocation_coordinates(self):
+        for i in range(0, self.df.shape[0]):
+            if (i != 0) and (i%100 == 0):
+                time.sleep(120)
+                now = datetime.now()
+                dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+                print("date and time =", dt_string)
+            
+            print('Index.. {0}'.format(i))
+            location = self.df['Location'].iloc[i]
+
+            latitude, longitude = get_valid_coordinates(location, geolocator)
+
+            self.df.loc[i, 'Latitude'] = latitude
+            self.df.loc[i, 'Longitude'] = longitude
+            print('Location found in: [{0}, {1}]'.format(latitude, longitude))
+
+            month = month_as_string(args.input_month)
+
+            geoloc_filaname = os.path.join(config['geolocation_data_folder'], f'tweets_with_geolocation_{month}_{args.input_year}.csv')
+            df_with_coordinates.to_csv(geoloc_filaname, sep='\t', encoding='utf-8', index=False)

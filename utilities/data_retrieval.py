@@ -31,9 +31,11 @@ import twitter_custom_functions as tcf
 
 keys_yaml_location = config["keys"]
 
+api_version_yaml_key = "search_tweets_api_fullarchive"
+
 # Load the credentials to get access to the API
 premium_search_args = load_credentials(filename=keys_yaml_location,
-                                       yaml_key="search_tweets_api_30day",
+                                       yaml_key=api_version_yaml_key,
                                        env_overwrite=False)
 print(premium_search_args)
 

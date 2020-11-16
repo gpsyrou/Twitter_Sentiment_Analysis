@@ -143,10 +143,10 @@ def translate_tweet(text: str) -> str:
     English and return the translated string.
     """
     translator = Translator(service_urls=['translate.google.com'])
+    print(text)
     try:
         language_detected = translator.detect(text)
         if language_detected.lang != 'en':
-            print(text)
             try:
                 textTranslated = translator.translate(text, dest='en').text
             except json.JSONDecodeError:
@@ -155,7 +155,7 @@ def translate_tweet(text: str) -> str:
         else:
             textTranslated = text
     except AttributeError:
-        textTranslated = ''
+        textTranslated = text
     return textTranslated
 
 

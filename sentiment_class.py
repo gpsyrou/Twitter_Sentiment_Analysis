@@ -183,6 +183,10 @@ class TwitterSentiment:
             return('Neutral')
 
     def calculate_sentiment(self):
+        """
+        Calculate the sentiment of a column by using the liu_hu_opinion_lexicon method
+        and output the result into a Sentiment column
+        """
         self.df['Sentiment'] = self.df[self.tweet_column].apply(lambda tweet:
             self.liu_hu_opinion_lexicon(tweet))
    

@@ -27,21 +27,19 @@ with open(json_loc) as json_file:
 # Project folder location and keys
 os.chdir(config["project_directory"])
 
-# Import the custom functions that we will use to retrieve and analyse
-# the data, and use the API to save the data to a .jsonl file.
-
 import twitter_custom_functions as tcf
 
 keys_yaml_location = config["keys"]
 
+api_version_yaml_key = "search_tweets_api_30day"  #  search_tweets_api_fullarchive
+
 # Load the credentials to get access to the API
 premium_search_args = load_credentials(filename=keys_yaml_location,
-                                       yaml_key="search_tweets_api_30day",
+                                       yaml_key=api_version_yaml_key,
                                        env_overwrite=False)
 print(premium_search_args)
 
-# Set tweet extraction period and create a list of days of interest
-
+# Set tweet extraction period and create a list of days
 parser=argparse.ArgumentParser()
 parser.add_argument('fromDate', type=str)
 parser.add_argument('toDate', type=str)
@@ -64,7 +62,7 @@ while args.fromDate != args.toDate:
     args.fromDate = incrementedDay
     
 
-# Retrieve the data for each day from the API
+# Retrieve the data for each day
 for day in daysList:
     
     dayNhourList = tcf.create_date_time_frame(day, hourSep=2)
@@ -72,7 +70,7 @@ for day in daysList:
     for hs in dayNhourList:
         fromDate = hs[0]
         toDate = hs[1]
-        # Create the searching rule for the stream
+        # Searching rule for the stream
         rule = gen_rule_payload(pt_rule=config['search_query'],
                                 from_date=fromDate,
                                 to_date=toDate ,
@@ -82,8 +80,7 @@ for day in daysList:
         rs = ResultStream(rule_payload=rule, max_results=100,
                           **premium_search_args)
 
-        # Create a .jsonl with the results of the Stream query
-        #file_date = datetime.now().strftime('%Y_%m_%d_%H_%M')
+        # Create a .jsonl with the results of the stream query
         file_date = '_'.join(hs).replace(' ', '').replace(':','')
         filename = os.path.join(config["raw_data_folder"],
                                 f'twitter_30day_results_{file_date}.jsonl')

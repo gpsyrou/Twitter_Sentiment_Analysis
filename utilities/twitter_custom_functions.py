@@ -137,23 +137,23 @@ def create_date_time_frame(day: str, hourSep: int) -> list:
     return timeFrameList
 
  
-def translate_tweet(text: str) -> str:
+def translate_tweet(input_text: str) -> str:
     """
     If Tweets are written in any other language than English, translate to
     English and return the translated string.
     """
     translator = Translator(service_urls=['translate.google.com'])
-    language_detected = translator.detect(text)
-    if language_detected.lang != 'en':
-        print(text)
-        try:
-            textTranslated = translator.translate(text, dest='en').text
-        except json.JSONDecodeError:
-            textTranslated = text
-            pass
-    else:
-        textTranslated = text
-    return textTranslated
+    print(input_text)
+    try:
+        language_detected = translator.detect(input_text)
+        if language_detected.lang != 'en':
+            try:
+                input_text = translator.translate(input_text, dest='en').text
+            except json.JSONDecodeError:
+                pass
+    except AttributeError:
+        pass
+    return input_text
 
 
 def get_valid_coordinates(location: str, geolocator: Nominatim) -> list:

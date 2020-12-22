@@ -23,6 +23,8 @@ sns.set_style("darkgrid")
 
 all_tweets_list_file_loc = r'all_tweets_list.txt'
 
+translated_tweets_filename = 'tweets_translated.csv'
+
 with open(all_tweets_list_file_loc, 'rb') as file:
     allTweetsList = pickle.load(file)
 
@@ -57,8 +59,6 @@ tweets_df['Year'] = pd.DatetimeIndex(tweets_df['Date']).year
 tweets_df['Month'] = pd.DatetimeIndex(tweets_df['Date']).month
 
 # Detect language and translate if necessary
-translated_tweets_filename = 'tweets_translated.csv'
-
 tweets_df['Tweet_Translated'] = tweets_df['Tweet'].apply(lambda text:
                                                     tcf.translate_tweet(text))
 

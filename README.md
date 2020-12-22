@@ -10,6 +10,7 @@
 		   Finally we include some analysis on the sentiment of the tweets by using the Hiu Lu opinion lexicon algorithm.
     3) 07/03/2020: Handle non-english tweets (translation) by using a Google translation API 2) Use the location column to identify the longitude and latitude
     4) 14/10/2020: Add data for more months except the initial tweets from January - March. Create a Class for the sentiment analysis. Update the main Jupyter notebook.
+	5) 12/11/2020: Version two completed. The jupyter notebook contains data and findings for all months, while analyzing further the months of April, August and October 2020 and compare the change in sentiment. In this version we also include a functionality to plot a geolocation map of the tweets.
 
 ### Running Guide for Data Retrieval and Preprocessing
 1. Run **data_retrieval.py** to get tweets for a specific period. The script is taking as parameters the start and end date we want to receive data from . It is not recommended to retrieve data for more than a 2-day period in a single API call, as the Twitter API has limits.<br/>

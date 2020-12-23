@@ -139,7 +139,7 @@ def create_date_time_frame(day: str, hourSep: int) -> list:
  
 def translate_tweet(input_text: str) -> str:
     """
-    If Tweets are written in any other language than English, translate to
+    Given text which is written in any other language than English, translate to
     English and return the translated string.
     """
     translator = Translator(service_urls=['translate.google.com'])

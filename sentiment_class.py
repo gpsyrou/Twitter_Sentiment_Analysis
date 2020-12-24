@@ -138,7 +138,7 @@ class TwitterSentiment:
         plt.figure(figsize=figsize)
         g = barplot(bgstring, counts, palette='muted')
         g.set_xticklabels(g.get_xticklabels(), rotation=80)
-        plt.title(f'Plot of the top-{top_n} pairs of words that appear next to each other',
+        plt.title(f'Top-{top_n} pairs of words that appear next to each other',
                   fontweight='bold')
         plt.ylabel('Count')
         plt.grid(True, alpha=0.2, color='black')

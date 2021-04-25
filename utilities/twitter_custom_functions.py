@@ -97,10 +97,9 @@ def remove_punct_and_stopwords(text: str, stopwordlist: list,
 
     tknzr = TweetTokenizer()
     try:
-        txt_tokenized = tknzr.tokenize(text)
-        text = ' '.join([char.lower() for char in txt_tokenized if char.lower() 
-                         not in string.punctuation and char.lower() not in
-                         stopwordlist and char not in num_list])
+        text_lower = text.lower()
+        txt_tokenized = tknzr.tokenize(text_lower)
+        text = ' '.join([char for char in txt_tokenized if char not in string.punctuation and char not in stopwordlist and char not in num_list])
     except TypeError:
        pass
    
